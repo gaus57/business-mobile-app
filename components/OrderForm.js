@@ -68,26 +68,24 @@ const OrderForm = ({setState, onSubmit, data}) => {
         onBackdropPress={() => {setShowProductPicker(false)}}
         overlayStyle={{padding: 0}}
       >
-        <ScrollView style={{paddingHorizontal: 10}}>
-          <ProductList
-            sort={['name']}
-            onPresItem={(product) => {
-              setState((state) => {
-                const newState = {...state};
-                newState.orderProducts.push({
-                  product_id: product.id,
-                  price: product.price,
-                  qty: '',
-                  unit_id: product.unit_id,
-                  unit: product.unit,
-                  product: product,
-                });
-                return newState;
+        <ProductList
+          sort={['name']}
+          onPresItem={(product) => {
+            setState((state) => {
+              const newState = {...state};
+              newState.orderProducts.push({
+                product_id: product.id,
+                price: product.price,
+                qty: '',
+                unit_id: product.unit_id,
+                unit: product.unit,
+                product: product,
               });
-              setShowProductPicker(false);
-            }}
-          />
-        </ScrollView>
+              return newState;
+            });
+            setShowProductPicker(false);
+          }}
+        />
       </Overlay>
 
       <InputNumber

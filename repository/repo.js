@@ -3,6 +3,7 @@ import Order from './models/Order';
 import OrderProduct from './models/OrderProduct';
 import Cost from './models/Cost';
 import Unit from './models/Unit';
+import {BaseModel} from 'expo-sqlite-orm';
 
 const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
   const options = {
@@ -10,7 +11,7 @@ const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
     where: {},
     page: page,
     limit: limit,
-    order: 'id DESC',
+    order: 'created_at DESC',
   };
   if (filters.total) {
     options.where.total_gteq = filters.total[0];
@@ -40,7 +41,7 @@ const GetOrder = async (id) => {
       'orderProducts.unit',
     ]);
   }
-
+  // console.log('order', order);
   return order;
 };
 
@@ -168,6 +169,71 @@ const GetUnit = async (id) => {
   return await Unit.find(id);
 };
 
+const GetOrderCreatedAtRange = async () => {
+  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "orders";`;
+  const params = [];
+  const rows = await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+  return rows.shift();
+};
+
+const GetCostCreatedAtRange = async () => {
+  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "costs";`;
+  const params = [];
+  const rows = await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+  return rows.shift();
+};
+
+const GetStatOrdersTotal = async () => {
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders GROUP BY year, month ORDER BY year DESC, month DESC;`;
+  const params = [];
+  console.log(sql, params);
+  return await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+};
+
+const GetStatCostsTotal = async () => {
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs GROUP BY year, month ORDER BY year DESC, month DESC;`;
+  const params = [];
+  console.log(sql, params);
+  return await Cost.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+};
+
+const GetStatProductsTotals = async (from, to) => {
+  const where = [];
+  const params = [];
+  if (from) {
+    where.push(`o.created_at >= ?`);
+    params.push(from);
+  }
+  if (to) {
+    where.push(`o.created_at < ?`);
+    params.push(to);
+  }
+  const sql = `SELECT p.id as id, p.name as label, p.unit_id as unit_id, SUM(op.qty) as qty, SUM(op.price * op.qty) as y FROM order_products op INNER JOIN products p ON op.product_id = p.id INNER JOIN orders o ON op.order_id = o.id ${where.length > 0 ? ' WHERE ' + where.join(' AND ') : '' } GROUP BY label ORDER BY y DESC;`;
+
+  console.log(sql, params);
+  const items = await OrderProduct.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+  await Product.loadRelations(items, ['unit']);
+  return items;
+};
+
+const GetStatProductTotals = async (ids, from, to) => {
+  const where = [`op.product_id IN(${ids.map(i=>'?').join(', ')})`];
+  const params = [...ids];
+  if (from) {
+    where.push(`o.created_at >= ?`);
+    params.push(from);
+  }
+  if (to) {
+    where.push(`o.created_at < ?`);
+    params.push(to);
+  }
+  let sql = `SELECT op.product_id as product_id, strftime('%Y', o.created_at/1000, 'unixepoch') as "year",  strftime('%m', o.created_at/1000, 'unixepoch') as "month", SUM(op.qty) as qty, SUM(op.price * op.qty) as "total" FROM order_products op INNER JOIN orders o ON op.order_id = o.id ${where.length > 0 ? ' WHERE ' + where.join(' AND ') : '' } GROUP BY product_id, year, month ORDER BY year, month;`;
+  console.log(sql, params);
+  const items = await OrderProduct.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
+  await OrderProduct.loadRelations(items, ['product.unit']);
+  return items;
+};
+
 const Migrate = async () => {
   await Product.createTable();
   await Order.createTable();
@@ -196,4 +262,10 @@ export default {
   GetCostTotalRange,
   GetUnits,
   GetUnit,
+  GetOrderCreatedAtRange,
+  GetCostCreatedAtRange,
+  GetStatOrdersTotal,
+  GetStatCostsTotal,
+  GetStatProductsTotals,
+  GetStatProductTotals,
 };

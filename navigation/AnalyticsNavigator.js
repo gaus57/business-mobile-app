@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Analytics1Screen from "../screens/Analytics1Screen";
 import Analytics2Screen from "../screens/Analytics2Screen";
 import Analytics3Screen from "../screens/Analytics3Screen";
+import TabBarIcon from '../components/TabBarIcon';
 
 const Analytics1Stack = createStackNavigator();
 function Analytics1Navigator() {
@@ -36,9 +37,18 @@ const BottomTab = createBottomTabNavigator();
 export default function AnalyticsNavigator() {
   return (
     <BottomTab.Navigator>
-      <BottomTab.Screen name="Analytics1" component={Analytics1Navigator} options={{title: 'Аналитика 1'}} />
-      <BottomTab.Screen name="Analytics2" component={Analytics2Navigator} options={{title: 'Аналитика 2'}} />
-      <BottomTab.Screen name="Analytics3" component={Analytics3Navigator} options={{title: 'Аналитика 3'}} />
+      <BottomTab.Screen name="Analytics1" component={Analytics1Navigator} options={{
+        title: 'Аналитика 1',
+        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-stats" />,
+      }} />
+      <BottomTab.Screen name="Analytics2" component={Analytics2Navigator} options={{
+        title: 'Аналитика 2',
+        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-pie" />,
+      }} />
+      <BottomTab.Screen name="Analytics3" component={Analytics3Navigator} options={{
+        title: 'Аналитика 3',
+        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-trending-up" />,
+      }} />
     </BottomTab.Navigator>
   )
 }

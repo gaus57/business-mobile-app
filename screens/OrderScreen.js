@@ -49,7 +49,7 @@ const OrderScreen = ({route, navigation}) => {
         />
         <ListItem
           title={totalSum < order.total ? 'Наценка' : 'Скидка'}
-          rightTitle={`${Math.abs(totalSum - order.total)} ₽`}
+          rightTitle={`${Math.round(Math.abs(totalSum - order.total)*100)/100} ₽`}
           rightSubtitle={order.total !== totalSum ? `${Math.round(Math.abs(order.total - totalSum) / totalSum * 100 * 10) / 10}%` : null}
           containerStyle={styles.itemContainer}
         />
