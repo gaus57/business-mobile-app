@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ScrollView, RefreshControl, ToastAndroid} from 'react-native';
+import {StyleSheet, RefreshControl, ToastAndroid, ScrollView} from 'react-native';
 import Repo from '../repository/repo';
 import CostForm from '../components/CostForm';
 
@@ -31,7 +31,7 @@ const CostEditScreen = ({route, navigation}) => {
   return (
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-      style={styles.container}
+      style={{flex: 1}}
     >
       {cost && <CostForm
         data={cost}

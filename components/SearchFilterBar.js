@@ -1,8 +1,9 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Card, Icon, Overlay, SearchBar} from 'react-native-elements';
+import {View, Text} from 'react-native';
+import {Card, Divider, Icon, Overlay, SearchBar} from 'react-native-elements';
 import Slider from './filters/Slider';
 import layout from '../constants/Layout';
+import DateRange from './filters/DateRange';
 
 const SearchFilterBar = ({filters = {}, options, onChange}) => {
   const [isShowFilters, setIsShowFilters] = React.useState(false);
@@ -34,20 +35,36 @@ const SearchFilterBar = ({filters = {}, options, onChange}) => {
       <Overlay
         isVisible={isShowFilters}
         onBackdropPress={hideFilters}
-        overlayStyle={{padding: 0}}
+        overlayStyle={{padding: 20}}
       >
-        <Card title='Фильты' containerStyle={{margin: 0, borderWidth: 0}}>
-          {Object.entries(options.filters).map(([key, val]) => {
-            return <Filter
-              key={key}
-              value={filters[key]}
-              options={val}
-              onChange={(value) => {
-                onChange({...filters, [key]: value});
-              }}
-            />
+        <View>
+          <Text style={{marginBottom: 15, fontSize: 18, fontWeight: 'bold', textAlign: 'center'}}>Фильтры</Text>
+
+          <Divider />
+
+          {Object.entries(options.filters).map(([key, val], i) => {
+            return <>
+              {val.label && <Text
+                  key={'label-'+key}
+                  style={{fontSize: 16, marginVertical: 10, textAlign: 'center'}}
+                >
+                  {val.label}
+                </Text>
+              }
+
+              <Filter
+                key={'filter-'+key}
+                value={filters[key]}
+                options={val}
+                onChange={(value) => {
+                  onChange({...filters, [key]: value});
+                }}
+              />
+
+              <Divider style={{marginVertical: 10}} />
+            </>
           })}
-        </Card>
+        </View>
       </Overlay>
     </>
   )
@@ -82,8 +99,22 @@ const RangeSlider = ({value, onChange, min, max, text}) => {
   )
 };
 
+const RangeDate = ({value, onChange, min, max}) => {
+  return (
+    <View style={{paddingBottom: 15}}>
+      <DateRange
+        value={value}
+        onChange={onChange}
+        min={min}
+        max={max}
+      />
+    </View>
+  )
+};
+
 const filtersMap = {
   'rangeSlider': RangeSlider,
+  'rangeDate': RangeDate,
 };
 
 export default React.memo(SearchFilterBar);

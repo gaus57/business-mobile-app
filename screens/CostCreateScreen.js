@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, ScrollView, ToastAndroid} from 'react-native';
+import {StyleSheet, ToastAndroid} from 'react-native';
 import Repo from '../repository/repo';
 import CostForm from '../components/CostForm';
+import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
 
 const CostCreateScreen = ({navigation}) => {
   const [cost, setCost] = React.useState({comment: '', total: ''});
@@ -13,12 +14,12 @@ const CostCreateScreen = ({navigation}) => {
   }, [navigation]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollViewKeyboardFix style={{flex: 1}}>
       <CostForm
         data={cost}
         setState={setCost}
         onSubmit={submit} />
-    </ScrollView>
+    </ScrollViewKeyboardFix>
   )
 };
 

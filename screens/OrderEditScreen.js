@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ToastAndroid, ScrollView, RefreshControl} from 'react-native';
+import {StyleSheet, ToastAndroid, RefreshControl, ScrollView} from 'react-native';
 import Repo from '../repository/repo';
 import OrderForm from '../components/OrderForm';
 
@@ -22,7 +22,7 @@ const OrderEditScreen = ({route, navigation}) => {
   return (
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-      style={styles.container}
+      style={{flex: 1}}
     >
       {order && <OrderForm
         data={order}

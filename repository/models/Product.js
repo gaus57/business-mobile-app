@@ -31,6 +31,7 @@ export default class Product extends BaseModel {
       unit_id: { type: types.INTEGER, not_null: true },
       created_at: { type: types.INTEGER, default: () => Date.now() },
       updated_at: { type: types.INTEGER, default: () => Date.now() },
+      deleted_at: { type: types.INTEGER },
       synced_at: { type: types.INTEGER },
     }
   }

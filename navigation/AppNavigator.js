@@ -6,6 +6,7 @@ import OrdersNavigator from './OrdersNavigator'
 import ProductsNavigator from './ProductsNavigator'
 import CostsNavigator from './CostsNavigator'
 import AnalyticsNavigator from './AnalyticsNavigator'
+import DevToolsNavigator from './DevToolsNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -18,6 +19,7 @@ export default function AppNavigator() {
         <Drawer.Screen name="Products" component={ProductsNavigator} options={{title: 'Товары'}} />
         <Drawer.Screen name="Costs" component={CostsNavigator} options={{title: 'Расходы'}} />
         <Drawer.Screen name="Analytics" component={AnalyticsNavigator} options={{title: 'Аналитика'}} />
+        <Drawer.Screen name="DevTools" component={DevToolsNavigator} options={{title: 'Инструменты разработчика'}} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

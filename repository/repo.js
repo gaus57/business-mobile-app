@@ -3,7 +3,6 @@ import Order from './models/Order';
 import OrderProduct from './models/OrderProduct';
 import Cost from './models/Cost';
 import Unit from './models/Unit';
-import {BaseModel} from 'expo-sqlite-orm';
 
 const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
   const options = {
@@ -16,6 +15,10 @@ const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
   if (filters.total) {
     options.where.total_gteq = filters.total[0];
     options.where.total_lteq = filters.total[1];
+  }
+  if (filters.created_at) {
+    options.where.created_at_gteq = filters.created_at[0];
+    options.where.created_at_lteq = filters.created_at[1];
   }
   if (filters.search) {
     options.where.id_eq = Number.parseInt(filters.search, 10);
@@ -131,6 +134,10 @@ const GetCosts = async ({filters = {}, sort, page = 1, limit = 20}) => {
   if (filters.total) {
     options.where.total_gteq = filters.total[0];
     options.where.total_lteq = filters.total[1];
+  }
+  if (filters.created_at) {
+    options.where.created_at_gteq = filters.created_at[0];
+    options.where.created_at_lteq = filters.created_at[1];
   }
   if (filters.comment) {
     options.where.comment_cont = `%${filters.comment}%`;

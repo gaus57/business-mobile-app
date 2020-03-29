@@ -19,7 +19,7 @@ const Slider = ({values, onChange, sliderLength, min, max, title}) => {
 
   return (
     <View style={{alignItems: 'center'}}>
-      <Text style={{fontSize: 18}}>{range && title(range)}</Text>
+      <Text style={{fontSize: 16}}>{range && title(range)}</Text>
 
       {range && <MultiSlider
         values={range}

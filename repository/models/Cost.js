@@ -23,6 +23,7 @@ export default class Cost extends BaseModel {
       comment: { type: types.TEXT, not_null: true, default: '' },
       created_at: { type: types.INTEGER, default: () => Date.now() },
       updated_at: { type: types.INTEGER, default: () => Date.now() },
+      deleted_at: { type: types.INTEGER },
       synced_at: { type: types.INTEGER },
     }
   }

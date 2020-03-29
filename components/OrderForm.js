@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {Button, Card, ListItem, Overlay, CheckBox} from 'react-native-elements'
+import {View, Text, StyleSheet, ScrollView, ToastAndroid} from 'react-native';
+import {Button, Card, ListItem, Overlay, CheckBox, Input} from 'react-native-elements'
 import InputNumber from './form/InputNumber';
 import InputText from './form/InputText';
 import ProductList from './ProductsList';
@@ -19,6 +19,30 @@ const OrderForm = ({setState, onSubmit, data}) => {
     setFirstRender(false);
   }, []);
 
+  const addProduct = React.useCallback((p) => {
+    for (let i in data.orderProducts) {
+      let op = data.orderProducts[i];
+      if (p.id === op.product_id) {
+        ToastAndroid.show('Товар уже добавлен к заказу', ToastAndroid.SHORT);
+        return;
+      }
+    }
+
+    setState((state) => {
+      const newState = {...state};
+      newState.orderProducts.push({
+        product_id: p.id,
+        price: p.price,
+        qty: '',
+        unit_id: p.unit_id,
+        unit: p.unit,
+        product: p,
+      });
+      return newState;
+    });
+    setShowProductPicker(false);
+  }, [data.orderProducts]);
+
   return (
     <View style={styles.container}>
 
@@ -29,9 +53,10 @@ const OrderForm = ({setState, onSubmit, data}) => {
             title={orderProduct.product.name}
             subtitle={`${orderProduct.price} ₽ / ${orderProduct.unit.name}`}
             input={{
+              inputComponent: InputQty,
               value: ''+orderProduct.qty,
               keyboardType: 'numeric',
-              containerStyle: {flexGrow: .5, height: 40, borderWidth: 1, borderColor: 'rgba(200, 200, 200, .7)', borderRadius: 5},
+              containerStyle: {flexGrow: .5, height: 40},
               inputStyle: {paddingHorizontal: 5},
               onChangeText: (val) => {
                 setState((state) => {
@@ -70,21 +95,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
       >
         <ProductList
           sort={['name']}
-          onPresItem={(product) => {
-            setState((state) => {
-              const newState = {...state};
-              newState.orderProducts.push({
-                product_id: product.id,
-                price: product.price,
-                qty: '',
-                unit_id: product.unit_id,
-                unit: product.unit,
-                product: product,
-              });
-              return newState;
-            });
-            setShowProductPicker(false);
-          }}
+          onPresItem={addProduct}
         />
       </Overlay>
 
@@ -131,6 +142,19 @@ const OrderForm = ({setState, onSubmit, data}) => {
         onPress={() => { onSubmit(data) }}
       />
     </View>
+  )
+};
+
+const InputQty = (props) => {
+  const ref = React.useRef();
+
+  React.useEffect(() => {
+    if (props.value) return;
+    ref.current.focus();
+  }, []);
+
+  return (
+    <Input ref={ref} {...props} />
   )
 };
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import {ToastAndroid, StyleSheet, ScrollView} from 'react-native';
+import {ToastAndroid, StyleSheet} from 'react-native';
 import ProductForm from '../components/ProductForm'
 import Repo from '../repository/repo'
 import Data from '../constants/Data';
+import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
 
 const ProductCreateScreen = ({navigation}) => {
   const [units, setUnits] = React.useState([]);
@@ -12,15 +13,14 @@ const ProductCreateScreen = ({navigation}) => {
     async function load() {
       let models = await Repo.GetUnits();
       setUnits(models);
-      // for (let i = 1; i < 100; i++) {
-      //   await Repo.CreateProduct({name: `product ${i}`, price: 10, unit_id: Data.DefaultUnitId});
-      // }
     }
     load();
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollViewKeyboardFix
+      style={{flex: 1}}
+    >
       <ProductForm
         data={product}
         units={units}
@@ -30,7 +30,7 @@ const ProductCreateScreen = ({navigation}) => {
           ToastAndroid.show('Товар сохранен', ToastAndroid.SHORT);
           navigation.replace('ProductsList');
         }} />
-    </ScrollView>
+    </ScrollViewKeyboardFix>
   )
 };
 

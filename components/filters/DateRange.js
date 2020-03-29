@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   field: {
-    width: 120,
+    width: 90,
     paddingHorizontal: 10,
     lineHeight: 30,
     alignContent: 'center',
-    backgroundColor: '#ddd',
-    fontSize: 18,
+    backgroundColor: '#eee',
+    fontSize: 16,
     textAlign: 'center',
   },
 });

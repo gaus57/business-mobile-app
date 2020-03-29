@@ -5,6 +5,7 @@ import AddButton from '../components/AddButton'
 import SearchFilterBar from '../components/SearchFilterBar';
 import InfiniteScrollList from '../components/InfiniteScrollList';
 import OrderListItem from '../components/OrderListItem';
+import {moneyFormat} from '../helpers/number';
 
 const perPage = 30;
 const orderListKeyExtractor = (item) => item.id.toString();
@@ -14,19 +15,16 @@ const OrdersListScreen = ({route, navigation}) => {
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
   const [orderTotalRange, setOrderTotalRange] = React.useState({});
+  const [orderDateRange, setOrderDateRange] = React.useState({});
   const [orders, setOrders] = React.useState([]);
-
-  React.useEffect(() => {
-    async function load() {
-      const range = await Repo.GetOrdersTotalRange();
-      setOrderTotalRange(range);
-    }
-    load();
-  }, []);
 
   const refresh = React.useCallback(async () => {
     let models = await Repo.GetOrders({filters, sort, page: 1, limit: perPage});
+    const range = await Repo.GetOrdersTotalRange();
+    const dateRange = await Repo.GetOrderCreatedAtRange();
     setOrders(models);
+    setOrderTotalRange(range);
+    setOrderDateRange(dateRange);
     setPage(2);
     setHasMore(true);
     // console.log('refreshing')
@@ -70,7 +68,17 @@ const OrdersListScreen = ({route, navigation}) => {
             options={{
               search: {field: 'search'},
               filters: {
-                total: {type: 'rangeSlider', ...orderTotalRange, text: values => `от ${values[0]} до ${values[1]} ₽`},
+                total: {
+                  type: 'rangeSlider',
+                  ...orderTotalRange,
+                  label: 'Сумма',
+                  text: values => `от ${moneyFormat(values[0])} до ${moneyFormat(values[1])} ₽`,
+                },
+                created_at: {
+                  type: 'rangeDate',
+                  ...orderDateRange,
+                  label: 'Дата',
+                }
               },
             }}
             onChange={(newFilters) => {

@@ -5,6 +5,7 @@ import InfiniteScrollList from '../components/InfiniteScrollList';
 import SearchFilterBar from '../components/SearchFilterBar';
 import AddButton from '../components/AddButton';
 import CostListItem from '../components/CostListItem';
+import {moneyFormat} from '../helpers/number';
 
 const perPage = 30;
 const costListKeyExtractor = (item) => item.id.toString();
@@ -15,19 +16,16 @@ const CostsListScreen = ({route, navigation}) => {
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
   const [totalRange, setTotalRange] = React.useState({});
+  const [dateRange, setDateRange] = React.useState({});
   const [costs, setCosts] = React.useState([]);
-
-  React.useEffect(() => {
-    async function load() {
-      const range = await Repo.GetCostTotalRange();
-      setTotalRange(range);
-    }
-    load();
-  }, []);
 
   const refresh = React.useCallback(async () => {
     const models = await Repo.GetCosts({filters, sort, page: 1, limit: perPage});
+    const range = await Repo.GetCostTotalRange();
+    const datesRange = await Repo.GetCostCreatedAtRange();
     setCosts(models);
+    setTotalRange(range);
+    setDateRange(datesRange);
     setPage(2);
     setHasMore(true);
     console.log('refreshing')
@@ -73,7 +71,17 @@ const CostsListScreen = ({route, navigation}) => {
             options={{
               search: {field: 'comment'},
               filters: {
-                total: {type: 'rangeSlider', ...totalRange, text: values => `от ${values[0]} до ${values[1]} ₽`},
+                total: {
+                  type: 'rangeSlider',
+                  label: 'Сумма',
+                  ...totalRange,
+                  text: values => `от ${moneyFormat(values[0])} до ${moneyFormat(values[1])} ₽`,
+                },
+                created_at: {
+                  type: 'rangeDate',
+                  ...dateRange,
+                  label: 'Дата',
+                }
               },
             }}
             onChange={(newFilters) => {

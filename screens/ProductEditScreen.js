@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ToastAndroid, ScrollView, RefreshControl} from 'react-native';
+import {StyleSheet, ToastAndroid, RefreshControl, ScrollView} from 'react-native';
 import Repo from '../repository/repo';
 import ProductForm from '../components/ProductForm';
 
@@ -31,14 +31,14 @@ const ProductEditScreen = ({route, navigation}) => {
   return (
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-      style={styles.container}
+      style={{flex: 1}}
     >
       {product && <ProductForm
         data={product}
         units={units}
         setState={setProduct}
         onSubmit={async (data) => {
-          const product = await Repo.UpdateProduct(data);
+          await Repo.UpdateProduct(data);
           ToastAndroid.show('Товар сохранен', ToastAndroid.SHORT);
           navigation.replace('Product', {id});
         }} />}

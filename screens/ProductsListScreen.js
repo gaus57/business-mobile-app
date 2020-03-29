@@ -17,17 +17,11 @@ const ProductsListScreen = ({route, navigation}) => {
   const [priceRange, setPriceRange] = React.useState({});
   const [products, setProducts] = React.useState([]);
 
-  React.useEffect(() => {
-    async function load() {
-      const range = await Repo.GetProductPriceRange();
-      setPriceRange(range);
-    }
-    load();
-  }, []);
-
   const refresh = React.useCallback(async () => {
     let models = await Repo.GetProducts({filters, sort, page: 1, limit: perPage});
+    const range = await Repo.GetProductPriceRange();
     setProducts(models);
+    setPriceRange(range);
     setPage(2);
     setHasMore(true);
     // console.log('refreshing')
@@ -71,7 +65,12 @@ const ProductsListScreen = ({route, navigation}) => {
             options={{
               search: {field: 'name'},
               filters: {
-                price: {type: 'rangeSlider', ...priceRange, text: values => `от ${values[0]} до ${values[1]} ₽`},
+                price: {
+                  type: 'rangeSlider',
+                  label: 'Цена',
+                  ...priceRange,
+                  text: values => `от ${values[0]} до ${values[1]} ₽`,
+                },
               },
             }}
             onChange={(newFilters) => {
