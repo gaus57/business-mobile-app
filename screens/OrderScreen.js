@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, View, RefreshControl} from 'react-native';
 import Repo from '../repository/repo';
 import {Card, ListItem} from 'react-native-elements';
 import {dateTimeText} from '../helpers/date';
+import {moneyFormat} from '../helpers/number';
 
 const OrderScreen = ({route, navigation}) => {
   const {id} = route.params;
@@ -36,26 +37,26 @@ const OrderScreen = ({route, navigation}) => {
         {order.orderProducts.map(orderProduct => <ListItem
           key={orderProduct.id}
           title={orderProduct.product.name}
-          subtitle={`${orderProduct.price} ₽ x ${orderProduct.qty} ${orderProduct.unit.name}`}
-          rightTitle={`${orderProduct.price*orderProduct.qty} ₽`}
+          subtitle={`${moneyFormat(orderProduct.price)} ₽ x ${orderProduct.qty} ${orderProduct.unit.name}`}
+          rightTitle={`${moneyFormat(orderProduct.price*orderProduct.qty)} ₽`}
           containerStyle={{paddingHorizontal: 0}}
         />)}
       </Card>
       <View style={{margin: 10}}>
         <ListItem
           title='Стоимость товаров'
-          rightTitle={`${totalSum} ₽`}
+          rightTitle={`${moneyFormat(totalSum)} ₽`}
           containerStyle={styles.itemContainer}
         />
         <ListItem
           title={totalSum < order.total ? 'Наценка' : 'Скидка'}
-          rightTitle={`${Math.round(Math.abs(totalSum - order.total)*100)/100} ₽`}
+          rightTitle={`${moneyFormat(Math.abs(totalSum - order.total))} ₽`}
           rightSubtitle={order.total !== totalSum ? `${Math.round(Math.abs(order.total - totalSum) / totalSum * 100 * 10) / 10}%` : null}
           containerStyle={styles.itemContainer}
         />
         <ListItem
           title='ИТОГО'
-          rightTitle={`${order.total} ₽`}
+          rightTitle={`${moneyFormat(order.total)} ₽`}
           containerStyle={styles.itemContainer}
           bottomDivider
         />

@@ -4,7 +4,7 @@ import OrderProduct from './models/OrderProduct';
 import Cost from './models/Cost';
 import Unit from './models/Unit';
 
-const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
+function prepareOrdersQuery({filters, sort, page = 1, limit = 20}) {
   const options = {
     columns: '*',
     where: {},
@@ -23,17 +23,23 @@ const GetOrders = async ({filters, sort, page = 1, limit = 20}) => {
   if (filters.search) {
     options.where.id_eq = Number.parseInt(filters.search, 10);
   }
-  // console.log('GetOrders', options);
+  return options;
+}
 
-  const orders = await Order.query(options);
+const GetOrders = async (params) => {
+  const orders = await Order.query(prepareOrdersQuery(params));
   await Order.loadRelations(orders, [
     'orderProducts.product',
     'orderProducts.unit',
   ]);
 
-  // console.log('GetOrders Order.query with relations', orders);
-
   return orders;
+};
+
+const GetOrdersTotal = async ({filters}) => {
+  const {where} = prepareOrdersQuery({filters});
+  const rows = await Order.query({where, columns: 'COUNT(*) as "total"'});
+  return rows.shift()["total"];
 };
 
 const GetOrder = async (id) => {
@@ -70,7 +76,7 @@ const GetOrdersTotalRange = async () => {
   return await Order.getTotalRange();
 };
 
-const GetProducts = async ({filters = {}, sort, page = 1, limit = 20}) => {
+function prepareProductsQuery({filters = {}, sort, page = 1, limit = 20}) {
   const options = {
     columns: '*',
     where: {},
@@ -85,11 +91,21 @@ const GetProducts = async ({filters = {}, sort, page = 1, limit = 20}) => {
   if (filters.name) {
     options.where.name_cont = `%${filters.name}%`;
   }
-  // console.log('getProducts', options);
-  const products = await Product.query(options);
+
+  return options
+}
+
+const GetProducts = async (params) => {
+  const products = await Product.query(prepareProductsQuery(params));
   await Product.loadRelations(products, ['unit']);
 
   return products
+};
+
+const GetProductsTotal = async ({filters}) => {
+  const {where} = prepareProductsQuery({filters});
+  const rows = await Product.query({where, columns: 'COUNT(*) as "price"'});
+  return rows.shift()["price"];
 };
 
 const GetProduct = async (id) => {
@@ -119,11 +135,7 @@ const GetProductPriceRange = async () => {
   return await Product.getPriceRange();
 };
 
-const GetProductsTotal = async (params = {}) => {
-  return await Product.getTotal(params);
-};
-
-const GetCosts = async ({filters = {}, sort, page = 1, limit = 20}) => {
+function prepareCostsQuery({filters = {}, sort, page = 1, limit = 20}) {
   const options = {
     columns: '*',
     where: {},
@@ -142,8 +154,18 @@ const GetCosts = async ({filters = {}, sort, page = 1, limit = 20}) => {
   if (filters.comment) {
     options.where.comment_cont = `%${filters.comment}%`;
   }
-  console.log('GetCosts', options);
-  return await Cost.query(options);
+
+  return options
+}
+
+const GetCosts = async (params) => {
+  return await Cost.query(prepareCostsQuery(params));
+};
+
+const GetCostsTotal = async ({filters}) => {
+  const {where} = prepareCostsQuery({filters});
+  const rows = await Cost.query({where, columns: 'COUNT(*) as "total"'});
+  return rows.shift()["total"];
 };
 
 const GetCost = async (id) => {
@@ -255,6 +277,7 @@ export default {
   GetOrder,
   CreateOrder,
   UpdateOrder,
+  GetOrdersTotal,
   GetOrdersTotalRange,
   GetProducts,
   GetProduct,
@@ -266,6 +289,7 @@ export default {
   GetCost,
   CreateCost,
   UpdateCost,
+  GetCostsTotal,
   GetCostTotalRange,
   GetUnits,
   GetUnit,

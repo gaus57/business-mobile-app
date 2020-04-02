@@ -3,6 +3,7 @@ import {StyleSheet, ScrollView, RefreshControl} from 'react-native';
 import Repo from '../repository/repo';
 import {dateTimeText} from '../helpers/date';
 import {ListItem} from 'react-native-elements';
+import {moneyFormat} from '../helpers/number';
 
 const ProductScreen = ({route, navigation}) => {
   const {id} = route.params;
@@ -36,7 +37,7 @@ const ProductScreen = ({route, navigation}) => {
 
         <ListItem
           title='Цена'
-          subtitle={`${product.price} ₽ / ${product.unit.name}`}
+          subtitle={`${moneyFormat(product.price)} ₽ / ${product.unit.name}`}
           containerStyle={styles.itemContainer}
           titleStyle={styles.label}
           subtitleStyle={styles.value}

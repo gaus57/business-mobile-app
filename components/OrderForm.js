@@ -5,6 +5,7 @@ import InputNumber from './form/InputNumber';
 import InputText from './form/InputText';
 import ProductList from './ProductsList';
 import DateTimePicker from './form/DateTimePicker';
+import {moneyFormat} from '../helpers/number';
 
 const OrderForm = ({setState, onSubmit, data}) => {
   const [firstRender, setFirstRender] = React.useState(true);
@@ -51,7 +52,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
           {data.orderProducts.map((orderProduct, i) => <ListItem
             key={orderProduct.product_id}
             title={orderProduct.product.name}
-            subtitle={`${orderProduct.price} ₽ / ${orderProduct.unit.name}`}
+            subtitle={`${moneyFormat(orderProduct.price)} ₽ / ${orderProduct.unit.name}`}
             input={{
               inputComponent: InputQty,
               value: ''+orderProduct.qty,

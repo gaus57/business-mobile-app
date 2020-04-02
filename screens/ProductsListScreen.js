@@ -6,40 +6,43 @@ import SearchFilterBar from '../components/SearchFilterBar';
 import InfiniteScrollList from '../components/InfiniteScrollList';
 import ProductListItem from '../components/ProductListItem';
 
-const perPage = 30;
+const perPage = 50;
 const productListKeyExtractor = (item) => item.id.toString();
 
 const ProductsListScreen = ({route, navigation}) => {
-  const {filters = {}, sort = []} = route.params ?? {};
-  console.log('ProductsListScreen route.params', route.params);
   const [page, setPage] = React.useState(1);
-  const [hasMore, setHasMore] = React.useState(true);
   const [priceRange, setPriceRange] = React.useState({});
   const [products, setProducts] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const {filters = {}, sort = []} = route.params ?? {};
+  const hasMore = products.length < total;
 
   const refresh = React.useCallback(async () => {
-    let models = await Repo.GetProducts({filters, sort, page: 1, limit: perPage});
+    setRefreshing(true);
+
+    const totalItems = await Repo.GetProductsTotal({filters});
+    const models = await Repo.GetProducts({filters, sort, page: 1, limit: perPage});
     const range = await Repo.GetProductPriceRange();
+
+    setTotal(totalItems);
     setProducts(models);
     setPriceRange(range);
     setPage(2);
-    setHasMore(true);
-    // console.log('refreshing')
+    console.log('refresh', totalItems);
+    setRefreshing(false);
   }, [filters, sort]);
 
   React.useEffect(() => {refresh()}, [route]);
 
   const loadMore = React.useCallback(async () => {
     if (!hasMore) return;
+
     const options = {filters, sort, page: page, limit: perPage};
     setPage(page +1);
-    // console.log('loadMore', options);
-    let models = await Repo.GetProducts(options);
-    if (models.length < perPage) {
-      setHasMore(false);
-    }
+    const models = await Repo.GetProducts(options);
     setProducts((state) => state.concat(models));
-    // console.log('loadMore complete', options);
   }, [hasMore, page, filters, sort]);
 
   const onPressProduct = React.useCallback((item) => {
@@ -47,6 +50,7 @@ const ProductsListScreen = ({route, navigation}) => {
   }, [navigation]);
 
   const renderProduct = React.useCallback(({item}) => <ProductListItem
+    key={item.id}
     item={item}
     onPress={onPressProduct}
   />, [onPressProduct]);
@@ -57,8 +61,9 @@ const ProductsListScreen = ({route, navigation}) => {
         data={products}
         renderItem={renderProduct}
         keyExtractor={productListKeyExtractor}
+        refreshing={refreshing}
         onRefresh={refresh}
-        loadMore={loadMore}
+        onEndReached={loadMore}
         ListHeaderComponent={
           <SearchFilterBar
             filters={filters}
@@ -79,7 +84,7 @@ const ProductsListScreen = ({route, navigation}) => {
             }}
           />
         }
-        ListFooterComponent={!hasMore && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
+        ListFooterComponent={!hasMore && !refreshing && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
         ListEmptyComponent={page > 1 && <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет товаров</Text>}
       />
 

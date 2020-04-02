@@ -41,23 +41,4 @@ export default class Product extends BaseModel {
     const rows = await this.repository.databaseLayer.executeSql(sql, []).then(({ rows }) => rows);
     return rows.shift();
   }
-
-  static async getTotal({price, name}) {
-    const where = [];
-    const params = [];
-    if (price) {
-      where.push('"price" >= ?', '"price" <= ?');
-      params.push(price[0], price[1]);
-    }
-    if (name) {
-      where.push('"name" LIKE ?');
-      params.push(`%${name}%`);
-    }
-    let sql = 'SELECT count(*) as "count" FROM products';
-    if (where) {
-      sql = sql + ` WHERE ${where.join(' AND ')}`
-    }
-    const rows = await this.repository.databaseLayer.executeSql(sql, params).then(({ rows }) => rows);
-    return rows.shift()['count'];
-  }
 }

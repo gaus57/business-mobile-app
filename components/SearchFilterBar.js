@@ -43,9 +43,8 @@ const SearchFilterBar = ({filters = {}, options, onChange}) => {
           <Divider />
 
           {Object.entries(options.filters).map(([key, val], i) => {
-            return <>
+            return <View key={key}>
               {val.label && <Text
-                  key={'label-'+key}
                   style={{fontSize: 16, marginVertical: 10, textAlign: 'center'}}
                 >
                   {val.label}
@@ -53,7 +52,6 @@ const SearchFilterBar = ({filters = {}, options, onChange}) => {
               }
 
               <Filter
-                key={'filter-'+key}
                 value={filters[key]}
                 options={val}
                 onChange={(value) => {
@@ -62,7 +60,7 @@ const SearchFilterBar = ({filters = {}, options, onChange}) => {
               />
 
               <Divider style={{marginVertical: 10}} />
-            </>
+            </View>
           })}
         </View>
       </Overlay>

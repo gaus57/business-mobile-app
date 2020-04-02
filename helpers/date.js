@@ -1,20 +1,21 @@
 /**
  *
- * @param {int} time
+ * @param {int|Date} time
  * @returns {string}
  */
 export function dateText(time) {
-  const date = new Date(time);
+  const date = time instanceof Date ? time : new Date(time);
   return date.toLocaleDateString().replace(/([\d]{2})\/([\d]{2})\//, '$2.$1.');
 }
 
 /**
  *
- * @param {int} time
+ * @param {int|Date} time
  * @returns {string}
  */
 export function timeText(time) {
-  return (new Date(time)).toLocaleTimeString()
+  const date = time instanceof Date ? time : new Date(time);
+  return date.toLocaleTimeString().replace(/:[\d]+$/, '');
 }
 
 /**

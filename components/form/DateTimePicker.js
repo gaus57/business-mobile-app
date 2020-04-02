@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, View, Platform} from 'react-native';
 import BaseDateTimePicker from '@react-native-community/datetimepicker';
+import {dateText, timeText} from '../../helpers/date';
 
 const DateTimePicker = ({label, value, error, onChange}) => {
   const date = new Date(value);
@@ -38,12 +39,12 @@ const DateTimePicker = ({label, value, error, onChange}) => {
           <Text
             onPress={showDatepicker}
             style={styles.value}
-          >{date.toLocaleDateString()}</Text>
+          >{dateText(date)}</Text>
 
           <Text
             onPress={showTimepicker}
             style={styles.value}
-          >{date.toLocaleTimeString()}</Text>
+          >{timeText(date)}</Text>
       </View>
       {show && (
         <BaseDateTimePicker

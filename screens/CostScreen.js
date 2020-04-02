@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Button, ScrollView, RefreshControl} from 'react-
 import Repo from '../repository/repo';
 import {ListItem} from 'react-native-elements';
 import {dateTimeText} from '../helpers/date';
+import {moneyFormat} from '../helpers/number';
 
 const CostScreen = ({route, navigation}) => {
   const {id} = route.params;
@@ -28,7 +29,7 @@ const CostScreen = ({route, navigation}) => {
       {cost && <>
         <ListItem
           title='Сумма'
-          subtitle={`${cost.total} ₽`}
+          subtitle={`${moneyFormat(cost.total)} ₽`}
           containerStyle={styles.itemContainer}
           titleStyle={styles.label}
           subtitleStyle={styles.value}

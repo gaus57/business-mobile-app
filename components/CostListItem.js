@@ -2,6 +2,7 @@ import React from 'react';
 import {ListItem} from 'react-native-elements';
 import {StyleSheet} from 'react-native';
 import {dateTimeText} from '../helpers/date';
+import {moneyFormat} from '../helpers/number';
 
 const CostListItem = ({item, onPress}) => {
   const _onPress = React.useCallback(() => {onPress(item)}, [onPress]);
@@ -11,7 +12,7 @@ const CostListItem = ({item, onPress}) => {
       key={item.id}
       title={dateTimeText(item.created_at)}
       subtitle={item.comment}
-      rightTitle={`${item.total} ₽`}
+      rightTitle={`${moneyFormat(item.total)} ₽`}
       onPress={_onPress}
       containerStyle={styles.container}
       bottomDivider
@@ -21,7 +22,7 @@ const CostListItem = ({item, onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: null,
+
   }
 });
 
