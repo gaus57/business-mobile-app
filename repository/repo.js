@@ -50,22 +50,22 @@ const GetOrder = async (id) => {
       'orderProducts.unit',
     ]);
   }
-  // console.log('order', order);
+
   return order;
 };
 
 const CreateOrder = async (data) => {
-  // console.log('CreateOrder', data);
   const order = new Order(data);
   await order.save();
-  await Promise.all(data.orderProducts.map(orderProduct => (new OrderProduct({...orderProduct, order_id: order.id})).save()));
+  await Promise.all(data.orderProducts.map(orderProduct => (new OrderProduct({...orderProduct, order_id: order.id, qty: orderProduct.qty || 1})).save()
+  ));
   return order;
 };
 
 const UpdateOrder = async (data) => {
   data.updated_at = Date.now();
   const order = await Order.update({...data, updated_at: Date.now()});
-  order.orderProducts = await Promise.all(data.orderProducts.map(orderProduct => OrderProduct.update({...orderProduct, updated_at: Date.now()})));
+  order.orderProducts = await Promise.all(data.orderProducts.map(orderProduct => OrderProduct.update({...orderProduct, qty: orderProduct.qty || 1, updated_at: Date.now()})));
   const deleted = await OrderProduct.query({where: {order_id_eq: data.id, id_nin: data.orderProducts.map(orderProduct => orderProduct.id)}});
   await Promise.all(deleted.map(item => OrderProduct.destroy(item.id)));
 
@@ -109,7 +109,6 @@ const GetProductsTotal = async ({filters}) => {
 };
 
 const GetProduct = async (id) => {
-  // console.log('getProduct', id);
   const product = await Product.find(id);
   if (product && product.unit_id) {
     product.unit = await GetUnit(product.unit_id)
@@ -119,7 +118,6 @@ const GetProduct = async (id) => {
 };
 
 const CreateProduct = async (data) => {
-  // console.log('CreateProduct', data);
   const product = new Product(data);
   await product.save();
 
@@ -127,7 +125,6 @@ const CreateProduct = async (data) => {
 };
 
 const UpdateProduct = async (data) => {
-  // console.log('UpdateProduct', data);
   return await Product.update({...data, updated_at: Date.now()});
 };
 
@@ -169,12 +166,10 @@ const GetCostsTotal = async ({filters}) => {
 };
 
 const GetCost = async (id) => {
-  // console.log('GetCost', id);
   return await Cost.find(id);
 };
 
 const CreateCost = async (data) => {
-  // console.log('CreateCost', data);
   const cost = new Cost(data);
   await cost.save();
 
@@ -182,7 +177,6 @@ const CreateCost = async (data) => {
 };
 
 const UpdateCost = async (data) => {
-  // console.log('UpdateCost', data);
   return await Cost.update({...data, updated_at: Date.now()});
 };
 
@@ -215,14 +209,14 @@ const GetCostCreatedAtRange = async () => {
 const GetStatOrdersTotal = async () => {
   let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
-  console.log(sql, params);
+
   return await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
 const GetStatCostsTotal = async () => {
   let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
-  console.log(sql, params);
+
   return await Cost.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
@@ -239,7 +233,6 @@ const GetStatProductsTotals = async (from, to) => {
   }
   const sql = `SELECT p.id as id, p.name as label, p.unit_id as unit_id, SUM(op.qty) as qty, SUM(op.price * op.qty) as y FROM order_products op INNER JOIN products p ON op.product_id = p.id INNER JOIN orders o ON op.order_id = o.id ${where.length > 0 ? ' WHERE ' + where.join(' AND ') : '' } GROUP BY label ORDER BY y DESC;`;
 
-  console.log(sql, params);
   const items = await OrderProduct.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
   await Product.loadRelations(items, ['unit']);
   return items;
@@ -257,7 +250,7 @@ const GetStatProductTotals = async (ids, from, to) => {
     params.push(to);
   }
   let sql = `SELECT op.product_id as product_id, strftime('%Y', o.created_at/1000, 'unixepoch') as "year",  strftime('%m', o.created_at/1000, 'unixepoch') as "month", SUM(op.qty) as qty, SUM(op.price * op.qty) as "total" FROM order_products op INNER JOIN orders o ON op.order_id = o.id ${where.length > 0 ? ' WHERE ' + where.join(' AND ') : '' } GROUP BY product_id, year, month ORDER BY year, month;`;
-  console.log(sql, params);
+
   const items = await OrderProduct.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
   await OrderProduct.loadRelations(items, ['product.unit']);
   return items;

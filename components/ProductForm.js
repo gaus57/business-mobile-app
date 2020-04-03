@@ -6,11 +6,34 @@ import InputText from './form/InputText';
 import Picker from './form/Picker'
 
 const ProductForm = ({units = [], setState, onSubmit, data}) => {
+  const [validated, setValidated] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+
+  const validate = React.useCallback((data) => {
+    const ers = {};
+    if (!data.price) {
+      ers.price = 'Не заполнена цена товара';
+    }
+    if (!data.name) {
+      ers.name = 'Не заполнено название товара';
+    }
+
+    setValidated(true);
+    setErrors(ers);
+
+    return !Object.entries(ers).length
+  }, []);
+
+  React.useEffect(() => {
+    validated && validate(data);
+  }, [data, validated]);
+
   return (
     <View style={styles.container}>
       <InputText
         label='Название'
         value={data.name}
+        error={errors.name}
         onChange={(name) => {
           setState((state) => ({...state, name}))
         }} />
@@ -18,6 +41,7 @@ const ProductForm = ({units = [], setState, onSubmit, data}) => {
       <InputNumber
         label='Цена'
         value={data.price}
+        error={errors.price}
         onChange={(price) => {
           setState((state) => ({...state, price}))
         }} />
@@ -34,7 +58,9 @@ const ProductForm = ({units = [], setState, onSubmit, data}) => {
       <Button
         containerStyle={styles.button}
         title="Сохранить"
-        onPress={() => { onSubmit(data) }}
+        onPress={() => {
+          validate(data) && onSubmit(data);
+        }}
       />
     </View>
   )

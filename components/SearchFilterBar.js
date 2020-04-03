@@ -84,7 +84,7 @@ const Filter = ({value, options = {}, onChange}) => {
 };
 
 const RangeSlider = ({value, onChange, min, max, text}) => {
-  if (!min || !max) {
+  if (!(min >= 0 && max >= 0) || min === max) {
     return null;
   }
 
@@ -105,7 +105,7 @@ const RangeSlider = ({value, onChange, min, max, text}) => {
 };
 
 const RangeDate = ({value, onChange, min, max}) => {
-  if (!min || !max) {
+  if (!(min >= 0 && max >= 0) || min === max) {
     return null;
   }
 

@@ -6,11 +6,31 @@ import InputText from './form/InputText';
 import DateTimePicker from './form/DateTimePicker';
 
 const CostForm = ({setState, onSubmit, data}) => {
+  const [validated, setValidated] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+
+  const validate = React.useCallback((data) => {
+    const ers = {};
+    if (!data.total) {
+      ers.total = 'Не заполнена сумма';
+    }
+
+    setValidated(true);
+    setErrors(ers);
+
+    return !Object.entries(ers).length
+  }, []);
+
+  React.useEffect(() => {
+    validated && validate(data);
+  }, [data, validated]);
+
   return (
     <View style={styles.container}>
       <InputNumber
         label='Сумма'
         value={data.total}
+        error={errors.total}
         onChange={(total) => {
           setState((state) => ({...state, total}))
         }} />
@@ -43,7 +63,7 @@ const CostForm = ({setState, onSubmit, data}) => {
       <Button
         containerStyle={styles.button}
         title="Сохранить"
-        onPress={() => {onSubmit(data)}}
+        onPress={() => {validate(data) && onSubmit(data)}}
       />
     </View>
   )

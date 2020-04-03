@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ToastAndroid} from 'react-native';
+import {RefreshControl, StyleSheet, ToastAndroid} from 'react-native';
 import OrderForm from '../components/OrderForm';
 import Repo from '../repository/repo';
 import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
@@ -10,10 +10,10 @@ const orderDefault = {
   orderProducts: [],
 };
 
-const OrderCreateScreen = ({navigation}) => {
-  const [order, setOrder] = React.useState(orderDefault);
+const OrderCreateScreen = ({route, navigation}) => {
+  const [order, setOrder] = React.useState({...orderDefault, orderProducts: []});
 
-  React.useEffect(() => { setOrder(orderDefault) }, []);
+  React.useEffect(() => { setOrder({...orderDefault, orderProducts: []}) }, [route]);
 
   return (
     <ScrollViewKeyboardFix

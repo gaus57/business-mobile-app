@@ -18,7 +18,7 @@ import {moneyFormat} from '../../helpers/number';
 const defaultZoomInterval = 1000*60*60*24*183; // пол года
 
 const MultiLineZoomChart = ({lines = []}) => {
-  if (lines.length === 0) {
+  if (!lines.length) {
     return null;
   }
 
@@ -39,7 +39,7 @@ const MultiLineZoomChart = ({lines = []}) => {
       setSelectedDomain(newZoom);
     }
   }, [lines]);
-
+console.log('render', lines);
   return (
     <View>
       <VictoryChart
@@ -72,7 +72,7 @@ const MultiLineZoomChart = ({lines = []}) => {
           }}
         />
 
-        {lines.map(line => line && line.data && line.data.length > 0 && <VictoryLine
+        {lines.map(line => line && line.data && line.data.length > 1 && <VictoryLine
           key={'l'+line.key}
           style={{
             data: {stroke: line.color, strokeWidth: 2},
@@ -111,7 +111,7 @@ const MultiLineZoomChart = ({lines = []}) => {
       >
         <VictoryAxis />
 
-        {lines.map(line => line && line.data && line.data.length > 0 && <VictoryLine
+        {lines.map(line => line && line.data && line.data.length > 1 && <VictoryLine
           key={line.key}
           style={{
             data: {stroke: line.color, strokeWidth: 1},

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, ScrollView, ToastAndroid} from 'react-native';
+import {View, Text, StyleSheet, ToastAndroid} from 'react-native';
 import {Button, Card, ListItem, Overlay, CheckBox, Input} from 'react-native-elements'
 import InputNumber from './form/InputNumber';
 import InputText from './form/InputText';
@@ -10,7 +10,26 @@ import {moneyFormat} from '../helpers/number';
 const OrderForm = ({setState, onSubmit, data}) => {
   const [firstRender, setFirstRender] = React.useState(true);
   const [showProductPicker, setShowProductPicker] = React.useState(false);
-  const totalSum = data.orderProducts.reduce((sum, product) => (sum + product.price*product.qty), 0);
+  const [validated, setValidated] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+
+  const totalSum = data.orderProducts.reduce((sum, product) => (sum + product.price*(product.qty || 1)), 0);
+
+  const validate = React.useCallback((data) => {
+    const ers = {};
+    if (!data.total) {
+      ers.total = 'Не заполнена сумма';
+    }
+
+    setValidated(true);
+    setErrors(ers);
+
+    return !Object.entries(ers).length
+  }, []);
+
+  React.useEffect(() => {
+    validated && validate(data);
+  }, [data, validated]);
 
   React.useEffect(() => {
     !firstRender && setState((state) => ({...state, total: totalSum}));
@@ -56,6 +75,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
             input={{
               inputComponent: InputQty,
               value: ''+orderProduct.qty,
+              placeholder: '1',
               keyboardType: 'numeric',
               containerStyle: {flexGrow: .5, height: 40},
               inputStyle: {paddingHorizontal: 5},
@@ -81,6 +101,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
             }}
             containerStyle={{paddingHorizontal: 0}}
           />)}
+
           <Button
             type={'outline'}
             title={'Добавить товар'}
@@ -103,9 +124,10 @@ const OrderForm = ({setState, onSubmit, data}) => {
       <InputNumber
         label='Сумма'
         value={data.total}
+        error={errors.total}
         rightIcon={
           <Text>
-            {data.total !== totalSum && `${data.total > totalSum ? '+' : ''}${Math.round((data.total - totalSum) / totalSum * 100 * 10) / 10}%`}
+            {totalSum > 0 && data.total !== totalSum && `${data.total > totalSum ? '+' : ''}${Math.round((data.total - totalSum) / totalSum * 100 * 10) / 10}%`}
           </Text>
         }
         onChange={(total) => {
@@ -140,22 +162,25 @@ const OrderForm = ({setState, onSubmit, data}) => {
       <Button
         containerStyle={styles.button}
         title="Сохранить"
-        onPress={() => { onSubmit(data) }}
+        onPress={() => { validate(data) && onSubmit(data) }}
       />
     </View>
   )
 };
 
 const InputQty = (props) => {
-  const ref = React.useRef();
-
-  React.useEffect(() => {
-    if (props.value) return;
-    ref.current.focus();
-  }, []);
+  // const ref = React.useRef();
+  //
+  // React.useEffect(() => {
+  //   if (props.value) return;
+  //   ref.current.focus();
+  // }, []);
 
   return (
-    <Input ref={ref} {...props} />
+    <Input
+      // ref={ref}
+      {...props}
+    />
   )
 };
 

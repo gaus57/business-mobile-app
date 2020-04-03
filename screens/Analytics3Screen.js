@@ -20,7 +20,7 @@ const Analytics3Screen = ({route, navigation}) => {
   const [showProductPicker, setShowProductPicker] = React.useState(false);
 
   const {ids = []} = route.params || {};
-  const dataLength = lines.reduce((line) => line.length, 0);
+  const dataLength = lines.reduce((agg, line) => agg + (line.data || []).length, 0);
 
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
