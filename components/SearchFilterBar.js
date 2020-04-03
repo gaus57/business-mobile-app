@@ -43,24 +43,16 @@ const SearchFilterBar = ({filters = {}, options, onChange}) => {
           <Divider />
 
           {Object.entries(options.filters).map(([key, val], i) => {
-            return <View key={key}>
-              {val.label && <Text
-                  style={{fontSize: 16, marginVertical: 10, textAlign: 'center'}}
-                >
-                  {val.label}
-                </Text>
-              }
-
+            return (
               <Filter
+                key={key}
                 value={filters[key]}
                 options={val}
                 onChange={(value) => {
                   onChange({...filters, [key]: value});
                 }}
               />
-
-              <Divider style={{marginVertical: 10}} />
-            </View>
+            )
           })}
         </View>
       </Overlay>
@@ -73,7 +65,22 @@ const Filter = ({value, options = {}, onChange}) => {
   if (FilterType === undefined) {
     throw new Error(`Unsupported filter type: ${options.type}`)
   }
-  return <FilterType value={value} onChange={onChange} {...options} />
+  const Filter = FilterType({...options, value, onChange});
+  if (!Filter) {
+    return null
+  }
+
+  return (
+    <View>
+      {options.label &&
+        <Text style={{fontSize: 16, marginVertical: 10, textAlign: 'center'}}>{options.label}</Text>
+      }
+
+      {Filter}
+
+      <Divider style={{marginVertical: 10}} />
+    </View>
+  )
 };
 
 const RangeSlider = ({value, onChange, min, max, text}) => {
@@ -98,6 +105,10 @@ const RangeSlider = ({value, onChange, min, max, text}) => {
 };
 
 const RangeDate = ({value, onChange, min, max}) => {
+  if (!min || !max) {
+    return null;
+  }
+
   return (
     <View style={{paddingBottom: 15}}>
       <DateRange

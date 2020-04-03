@@ -92,8 +92,14 @@ const CostsListScreen = ({route, navigation}) => {
             }}
           />
         }
-        ListFooterComponent={!hasMore && !refreshing && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
-        ListEmptyComponent={page > 1 && <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет расходов</Text>}
+        ListFooterComponent={
+          !hasMore && costs.length > 0 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>
+        }
+        ListEmptyComponent={
+          page > 1 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет расходов</Text>
+        }
       />
 
       <AddButton onPress={()=>{navigation.navigate('CostCreate')}} />

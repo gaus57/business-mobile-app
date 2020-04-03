@@ -15,18 +15,19 @@ const colors = [
 ];
 
 const Analytics3Screen = ({route, navigation}) => {
-  const {ids = []} = route.params || {};
-
   const [refreshing, setRefreshing] = React.useState(false);
   const [lines, setLines] = React.useState([]);
   const [showProductPicker, setShowProductPicker] = React.useState(false);
+
+  const {ids = []} = route.params || {};
+  const dataLength = lines.reduce((line) => line.length, 0);
 
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
 
     const stat = await Repo.GetStatProductTotals(ids);
     const data = prepareLines(stat);
-    // console.log('lines', data);
+
     setLines(data);
 
     setRefreshing(false);
@@ -66,6 +67,10 @@ const Analytics3Screen = ({route, navigation}) => {
           onPress={() => {setShowProductPicker(true)}}
           containerStyle={{marginVertical: 15, marginHorizontal: 30}}
         />
+
+        {!dataLength && !refreshing &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет данных</Text>
+        }
 
         <MultiLineZoomChart
           lines={lines}

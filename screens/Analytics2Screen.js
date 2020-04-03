@@ -55,6 +55,10 @@ const Analytics2Screen = ({route, navigation}) => {
         />
       </View>
 
+      {!data.length && !refreshing &&
+        <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет данных</Text>
+      }
+
       <Svg width={Layout.window.width} height={300}>
         {data.length > 0 && <VictoryPie
           width={Layout.window.width}

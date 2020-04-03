@@ -41,16 +41,16 @@ async function loadTestData() {
 
   // Создаем заказы
   const products = await Repo.GetProducts({}, [], 1, 1000);
-  for (let i = 0; i < 4; i++) {
-    await Promise.all(Array.apply(null, Array(50)).map(() => new Promise(async (resolve, _) => {
+  for (let i = 0; i < 20; i++) {
+    await Promise.all(Array.apply(null, Array(10)).map(() => new Promise(async (resolve, _) => {
       await createRandomOrder(products);
       resolve();
     })));
   }
 
   // Создаем расходы
-  for (let i = 0; i < 4; i++) {
-    await Promise.all(Array.apply(null, Array(50)).map(() => new Promise(async (resolve, _) => {
+  for (let i = 0; i < 20; i++) {
+    await Promise.all(Array.apply(null, Array(10)).map(() => new Promise(async (resolve, _) => {
       const date = new Date();
       date.setFullYear(2020 - Math.ceil(Math.random() * 4), Math.floor(Math.random() * 12), Math.ceil(Math.random() * 28));
       await Repo.CreateCost({

@@ -4,8 +4,6 @@ import Repo from '../repository/repo';
 import {indexBy} from '../helpers/map';
 import MultiLineZoomChart from '../components/chart/MultiLineZoomChart';
 
-const defaultZoomInterval = 1000*60*60*24*183; // пол года
-
 const Analytics1Screen = () => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState({});
@@ -26,20 +24,22 @@ const Analytics1Screen = () => {
     refresh();
   }, []);
 
-  // console.log('render', profitData, costData, revenueData);
-
   return (
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
       style={styles.container}
     >
-      <MultiLineZoomChart
+      {data.profit.length > 0 && <MultiLineZoomChart
         lines={[
           {key: '1', color: '#41ff00', title: 'Чистая прибыль', data: data.profit},
           {key: '2', color: '#0007ff', title: 'Выручка', data: data.revenue},
           {key: '3', color: '#ff1200', title: 'Расходы', data: data.costs},
         ]}
-      />
+      />}
+
+      {!data.profit.length && !refreshing &&
+        <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет данных</Text>
+      }
     </ScrollView>
   )
 };

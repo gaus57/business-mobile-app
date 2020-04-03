@@ -84,8 +84,14 @@ const ProductsListScreen = ({route, navigation}) => {
             }}
           />
         }
-        ListFooterComponent={!hasMore && !refreshing && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
-        ListEmptyComponent={page > 1 && <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет товаров</Text>}
+        ListFooterComponent={
+          !hasMore && products.length > 0 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>
+        }
+        ListEmptyComponent={
+          page > 1 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет товаров</Text>
+        }
       />
 
       <AddButton onPress={()=>{navigation.navigate('ProductCreate')}} />

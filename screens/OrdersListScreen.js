@@ -92,8 +92,14 @@ const OrdersListScreen = ({route, navigation}) => {
             }}
           />
         }
-        ListFooterComponent={!hasMore && !refreshing && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
-        ListEmptyComponent={page > 1 && <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет заказов</Text>}
+        ListFooterComponent={
+          !hasMore && orders.length > 0 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>
+        }
+        ListEmptyComponent={
+          page > 1 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет заказов</Text>
+        }
       />
 
       <AddButton onPress={()=>{navigation.navigate('OrderCreate')}} />

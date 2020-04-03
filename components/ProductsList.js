@@ -59,8 +59,14 @@ const ProductList = ({filters, sort, onPresItem, isChecked}) => {
         onRefresh={refresh}
         onEndReached={loadMore}
         // ListHeaderComponent={}
-        ListFooterComponent={!hasMore && !refreshing && <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>}
-        ListEmptyComponent={page > 1 && <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет товаров</Text>}
+        ListFooterComponent={
+          !hasMore && products.length > 0 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Конец списка</Text>
+        }
+        ListEmptyComponent={
+          page > 1 &&
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет товаров</Text>
+        }
       />
     </>
   )
