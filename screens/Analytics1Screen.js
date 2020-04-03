@@ -29,7 +29,7 @@ const Analytics1Screen = () => {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
       style={styles.container}
     >
-      {data.profit.length > 0 && <MultiLineZoomChart
+      {(data.profit || []).length > 0 && <MultiLineZoomChart
         lines={[
           {key: '1', color: '#41ff00', title: 'Чистая прибыль', data: data.profit},
           {key: '2', color: '#0007ff', title: 'Выручка', data: data.revenue},
@@ -37,7 +37,7 @@ const Analytics1Screen = () => {
         ]}
       />}
 
-      {!data.profit.length && !refreshing &&
+      {!(data.profit || []).length && !refreshing &&
         <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет данных</Text>
       }
     </ScrollView>
