@@ -17,9 +17,7 @@ const ProductScreen = ({route, navigation}) => {
     setRefreshing(false);
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   return (
     <ScrollView

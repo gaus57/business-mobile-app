@@ -13,6 +13,8 @@ const orderDefault = {
 const OrderCreateScreen = ({navigation}) => {
   const [order, setOrder] = React.useState(orderDefault);
 
+  React.useEffect(() => { setOrder(orderDefault) }, []);
+
   return (
     <ScrollViewKeyboardFix
       style={{flex: 1}}
@@ -23,7 +25,7 @@ const OrderCreateScreen = ({navigation}) => {
         onSubmit={async (data) => {
           await Repo.CreateOrder(data);
           ToastAndroid.show('Заказ сохранен', ToastAndroid.SHORT);
-          navigation.replace('OrdersList');
+          navigation.navigate('OrdersList', {v: Date.now()});
         }}/>
     </ScrollViewKeyboardFix>
   )

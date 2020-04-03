@@ -30,7 +30,7 @@ const ProductsListScreen = ({route, navigation}) => {
     setProducts(models);
     setPriceRange(range);
     setPage(2);
-    console.log('refresh', totalItems);
+
     setRefreshing(false);
   }, [filters, sort]);
 
@@ -79,7 +79,6 @@ const ProductsListScreen = ({route, navigation}) => {
               },
             }}
             onChange={(newFilters) => {
-              // console.log('onValuesChangeFinish', newFilters);
               navigation.setParams({...(route.params || {}), filters: newFilters});
             }}
           />

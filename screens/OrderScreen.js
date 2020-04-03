@@ -6,9 +6,10 @@ import {dateTimeText} from '../helpers/date';
 import {moneyFormat} from '../helpers/number';
 
 const OrderScreen = ({route, navigation}) => {
-  const {id} = route.params;
   const [refreshing, setRefreshing] = React.useState(false);
   const [order, setOrder] = React.useState();
+
+  const {id} = route.params;
   const totalSum = order
     ? order.orderProducts.reduce((sum, product) => (sum + product.price*product.qty), 0)
     : 0;
@@ -20,9 +21,7 @@ const OrderScreen = ({route, navigation}) => {
     setRefreshing(false);
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   if (!order) {
     return null;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView, RefreshControl, ToastAndroid} from 'react-native';
+import {Text, StyleSheet, ScrollView, RefreshControl, ToastAndroid} from 'react-native';
 import Repo from '../repository/repo';
 import MultiLineZoomChart from '../components/chart/MultiLineZoomChart';
 import {Button, Overlay} from 'react-native-elements';

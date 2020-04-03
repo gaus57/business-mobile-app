@@ -4,9 +4,10 @@ import Repo from '../repository/repo';
 import CostForm from '../components/CostForm';
 
 const CostEditScreen = ({route, navigation}) => {
-  const {id} = route.params;
   const [refreshing, setRefreshing] = React.useState(false);
   const [cost, setCost] = React.useState();
+
+  const {id} = route.params;
 
   const refresh = React.useCallback(() => {
     async function load() {
@@ -18,14 +19,12 @@ const CostEditScreen = ({route, navigation}) => {
     load();
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   const submit = React.useCallback(async (data) => {
     await Repo.UpdateCost(data);
     ToastAndroid.show('Расход сохранен', ToastAndroid.SHORT);
-    navigation.replace('Cost', {id});
+    navigation.navigate('Cost', {id, v: Date.now()});
   }, [navigation]);
 
   return (

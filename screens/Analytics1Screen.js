@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView, RefreshControl} from 'react-native';
+import {Text, StyleSheet, ScrollView, RefreshControl} from 'react-native';
 import Repo from '../repository/repo';
 import {indexBy} from '../helpers/map';
 import MultiLineZoomChart from '../components/chart/MultiLineZoomChart';

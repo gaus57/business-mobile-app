@@ -5,14 +5,17 @@ import Repo from '../repository/repo'
 import Data from '../constants/Data';
 import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
 
+const productDefault = {name: '', price: '', unit_id: Data.DefaultUnitId};
+
 const ProductCreateScreen = ({navigation}) => {
   const [units, setUnits] = React.useState([]);
-  const [product, setProduct] = React.useState({name: '', price: '', unit_id: Data.DefaultUnitId});
+  const [product, setProduct] = React.useState(productDefault);
 
   React.useEffect(() => {
     async function load() {
       let models = await Repo.GetUnits();
       setUnits(models);
+      setProduct(productDefault);
     }
     load();
   }, []);
@@ -28,7 +31,7 @@ const ProductCreateScreen = ({navigation}) => {
         onSubmit={async (data) => {
           await Repo.CreateProduct(data);
           ToastAndroid.show('Товар сохранен', ToastAndroid.SHORT);
-          navigation.replace('ProductsList');
+          navigation.navigate('ProductsList', {v: Date.now()});
         }} />
     </ScrollViewKeyboardFix>
   )

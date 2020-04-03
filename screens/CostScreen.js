@@ -1,14 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, ScrollView, RefreshControl} from 'react-native';
+import {StyleSheet, ScrollView, RefreshControl} from 'react-native';
 import Repo from '../repository/repo';
 import {ListItem} from 'react-native-elements';
 import {dateTimeText} from '../helpers/date';
 import {moneyFormat} from '../helpers/number';
 
 const CostScreen = ({route, navigation}) => {
-  const {id} = route.params;
   const [refreshing, setRefreshing] = React.useState(false);
   const [cost, setCost] = React.useState();
+
+  const {id} = route.params;
 
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -17,9 +18,7 @@ const CostScreen = ({route, navigation}) => {
     setRefreshing(false);
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   return (
     <ScrollView

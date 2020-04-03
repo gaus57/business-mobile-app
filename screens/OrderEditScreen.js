@@ -4,20 +4,21 @@ import Repo from '../repository/repo';
 import OrderForm from '../components/OrderForm';
 
 const OrderEditScreen = ({route, navigation}) => {
-  const {id} = route.params;
   const [refreshing, setRefreshing] = React.useState(false);
   const [order, setOrder] = React.useState();
 
+  const {id} = route.params;
+
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
+
     const model = await Repo.GetOrder(id);
     setOrder(model);
+
     setRefreshing(false);
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   return (
     <ScrollView
@@ -30,7 +31,7 @@ const OrderEditScreen = ({route, navigation}) => {
         onSubmit={async (data) => {
           await Repo.UpdateOrder(data);
           ToastAndroid.show('Заказ сохранен', ToastAndroid.SHORT);
-          navigation.replace('OrdersList');
+          navigation.navigate('OrdersList', {v: Date.now()});
         }}/>}
     </ScrollView>
   )

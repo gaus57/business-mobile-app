@@ -24,9 +24,7 @@ const ProductEditScreen = ({route, navigation}) => {
     loadUnits();
   }, [id]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [id]);
+  React.useEffect(() => { refresh() }, [route]);
 
   return (
     <ScrollView
@@ -40,7 +38,7 @@ const ProductEditScreen = ({route, navigation}) => {
         onSubmit={async (data) => {
           await Repo.UpdateProduct(data);
           ToastAndroid.show('Товар сохранен', ToastAndroid.SHORT);
-          navigation.replace('Product', {id});
+          navigation.navigate('Product', {id, v: Date.now()});
         }} />}
     </ScrollView>
   )
