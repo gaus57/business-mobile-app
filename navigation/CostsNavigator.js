@@ -5,15 +5,20 @@ import CostCreateScreen from "../screens/CostCreateScreen";
 import CostEditScreen from "../screens/CostEditScreen";
 import CostScreen from "../screens/CostScreen";
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ProductScreen from '../screens/ProductScreen';
 import TabBarIcon from '../components/TabBarIcon';
-import ProductEditScreen from '../screens/ProductEditScreen';
+import BottomTabCustom from '../components/BottomTabCustom';
+import BottomTabRemoveCost from '../components/BottomTabRemoveCost';
 
 const BottomTab = createBottomTabNavigator();
 function CostBottomTabNavigator({ route }) {
   const {id} = route.params;
   return (
-    <BottomTab.Navigator initialRouteName='Cost'>
+    <BottomTab.Navigator
+      initialRouteName='Cost'
+      tabBar={props => <BottomTabCustom {...props} pushItem={
+        <BottomTabRemoveCost route={route} />
+      }/>}
+    >
       <BottomTab.Screen
         name="Cost"
         component={CostScreen}

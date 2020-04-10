@@ -84,7 +84,11 @@ const CostsListScreen = ({route, navigation}) => {
                   type: 'rangeDate',
                   ...dateRange,
                   label: 'Дата',
-                }
+                },
+                deleted_at: {
+                  type: 'checkbox',
+                  text: 'Удаленные товары',
+                },
               },
             }}
             onChange={(newFilters) => {

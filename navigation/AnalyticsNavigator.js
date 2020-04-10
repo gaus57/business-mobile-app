@@ -5,6 +5,7 @@ import Analytics1Screen from "../screens/Analytics1Screen";
 import Analytics2Screen from "../screens/Analytics2Screen";
 import Analytics3Screen from "../screens/Analytics3Screen";
 import TabBarIcon from '../components/TabBarIcon';
+import BottomTabCustom from '../components/BottomTabCustom';
 
 const Analytics1Stack = createStackNavigator();
 function Analytics1Navigator() {
@@ -36,7 +37,7 @@ function Analytics3Navigator() {
 const BottomTab = createBottomTabNavigator();
 export default function AnalyticsNavigator() {
   return (
-    <BottomTab.Navigator>
+    <BottomTab.Navigator tabBar={props => <BottomTabCustom {...props} />}>
       <BottomTab.Screen name="Analytics1" component={Analytics1Navigator} options={{
         title: 'Аналитика 1',
         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-stats" />,

@@ -24,7 +24,7 @@ const OrderCreateScreen = ({route, navigation}) => {
         setState={setOrder}
         onSubmit={async (data) => {
           await Repo.CreateOrder(data);
-          ToastAndroid.show('Заказ сохранен', ToastAndroid.SHORT);
+          ToastAndroid.show('Продажа сохранена', ToastAndroid.SHORT);
           navigation.navigate('OrdersList', {v: Date.now()});
         }}/>
     </ScrollViewKeyboardFix>

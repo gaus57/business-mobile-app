@@ -61,16 +61,22 @@ const OrderScreen = ({route, navigation}) => {
         />
 
         <ListItem
-          title='Оформлен'
+          title='Оформлена'
           subtitle={dateTimeText(order.created_at)}
           containerStyle={styles.itemContainer}
         />
 
         <ListItem
-          title='Изменен'
+          title='Изменена'
           subtitle={dateTimeText(order.updated_at)}
           containerStyle={styles.itemContainer}
         />
+
+        {!!order.deleted_at && <ListItem
+          title='Удалена'
+          subtitle={dateTimeText(order.deleted_at)}
+          containerStyle={styles.itemContainer}
+        />}
       </View>
     </ScrollView>
   )

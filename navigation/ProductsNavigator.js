@@ -6,12 +6,19 @@ import ProductCreateScreen from "../screens/ProductCreateScreen";
 import ProductEditScreen from "../screens/ProductEditScreen";
 import ProductScreen from "../screens/ProductScreen"
 import TabBarIcon from "../components/TabBarIcon";
+import BottomTabCustom from '../components/BottomTabCustom';
+import BottomTabRemoveProduct from '../components/BottomTabRemoveProduct';
 
 const BottomTab = createBottomTabNavigator();
 function ProductBottomTabNavigator({ route }) {
   const {id} = route.params;
   return (
-    <BottomTab.Navigator initialRouteName='Product'>
+    <BottomTab.Navigator
+      initialRouteName='Product'
+      tabBar={props => <BottomTabCustom {...props} pushItem={
+        <BottomTabRemoveProduct route={route} />
+      }/>}
+    >
       <BottomTab.Screen
         name="Product"
         component={ProductScreen}

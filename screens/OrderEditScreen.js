@@ -19,7 +19,7 @@ const OrderEditScreen = ({route, navigation}) => {
   }, [id]);
 
   React.useEffect(() => { refresh() }, [route]);
-
+  console.log(order);
   return (
     <ScrollView
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
@@ -30,7 +30,7 @@ const OrderEditScreen = ({route, navigation}) => {
         setState={setOrder}
         onSubmit={async (data) => {
           await Repo.UpdateOrder(data);
-          ToastAndroid.show('Заказ сохранен', ToastAndroid.SHORT);
+          ToastAndroid.show('Продажа сохранена', ToastAndroid.SHORT);
           navigation.navigate('OrdersList', {v: Date.now()});
         }}/>}
     </ScrollView>

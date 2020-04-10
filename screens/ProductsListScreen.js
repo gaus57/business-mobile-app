@@ -76,6 +76,10 @@ const ProductsListScreen = ({route, navigation}) => {
                   ...priceRange,
                   text: values => `от ${values[0]} до ${values[1]} ₽`,
                 },
+                deleted_at: {
+                  type: 'checkbox',
+                  text: 'Удаленные товары',
+                },
               },
             }}
             onChange={(newFilters) => {

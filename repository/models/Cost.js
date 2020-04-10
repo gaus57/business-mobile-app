@@ -29,7 +29,7 @@ export default class Cost extends BaseModel {
   }
 
   static async getTotalRange() {
-    const sql = 'SELECT min(total) as "min", max(total) as "max" FROM costs;';
+    const sql = 'SELECT min(total) as "min", max(total) as "max" FROM costs WHERE deleted_at IS NULL;';
     const rows = await this.repository.databaseLayer.executeSql(sql, []).then(({ rows }) => rows);
     return rows.shift();
   }

@@ -2960,7 +2960,7 @@ expo-permissions@~8.0.0:
 
 "expo-sqlite-orm@https://github.com/gaus57/expo-sqlite-orm":
   version "1.5.3"
-  resolved "https://github.com/gaus57/expo-sqlite-orm#38dfc05b909c8b668d029f7c326e66a16a46c336"
+  resolved "https://github.com/gaus57/expo-sqlite-orm#6f72182e3c3ae0eb3edcbecd29caf25b53a964fd"
 
 expo-sqlite@~8.0.0:
   version "8.0.0"

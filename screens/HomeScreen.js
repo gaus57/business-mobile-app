@@ -8,7 +8,7 @@ const HomeScreen = ({navigation}) => {
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => navigation.navigate('Orders')}>
-        <Text style={styles.menuButtonText}>Заказы</Text>
+        <Text style={styles.menuButtonText}>Продажы</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Products')}>
         <Text style={styles.menuButtonText}>Товары</Text>

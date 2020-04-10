@@ -36,7 +36,7 @@ export default class Order extends BaseModel {
   }
 
   static async getTotalRange() {
-    const sql = 'SELECT min(total) as "min", max(total) as "max" FROM orders;';
+    const sql = 'SELECT min(total) as "min", max(total) as "max" FROM orders WHERE deleted_at IS NULL;';
     const rows = await this.repository.databaseLayer.executeSql(sql, []).then(({ rows }) => rows);
     return rows.shift();
   }

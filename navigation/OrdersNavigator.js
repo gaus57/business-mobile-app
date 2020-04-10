@@ -6,18 +6,25 @@ import OrderEditScreen from "../screens/OrderEditScreen";
 import OrderScreen from "../screens/OrderScreen";
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import TabBarIcon from '../components/TabBarIcon';
+import BottomTabCustom from '../components/BottomTabCustom';
+import BottomTabRemoveOrder from '../components/BottomTabRemoveOrder';
 
 const BottomTab = createBottomTabNavigator();
 function OrderBottomTabNavigator({ route }) {
   const {id} = route.params;
   return (
-    <BottomTab.Navigator initialRouteName='Order'>
+    <BottomTab.Navigator
+      initialRouteName='Order'
+      tabBar={props => <BottomTabCustom {...props} pushItem={
+        <BottomTabRemoveOrder route={route} />
+      }/>}
+    >
       <BottomTab.Screen
         name="Order"
         component={OrderScreen}
         initialParams={{ id }}
         options={{
-          title: 'Заказ',
+          title: 'Продажа',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-eye" />,
         }} />
       <BottomTab.Screen
@@ -36,9 +43,9 @@ const Stack = createStackNavigator();
 export default function OrdersNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="OrdersList" component={OrdersListScreen} options={{title: 'Заказы'}} />
-      <Stack.Screen name="OrderCreate" component={OrderCreateScreen} options={{title: 'Новый заказ'}} />
-      <Stack.Screen name="Order" component={OrderBottomTabNavigator} options={({route}) => ({title: 'Заказ №'+route.params.id})} />
+      <Stack.Screen name="OrdersList" component={OrdersListScreen} options={{title: 'Продажы'}} />
+      <Stack.Screen name="OrderCreate" component={OrderCreateScreen} options={{title: 'Новая продажа'}} />
+      <Stack.Screen name="Order" component={OrderBottomTabNavigator} options={({route}) => ({title: 'Продажа №'+route.params.id})} />
     </Stack.Navigator>
   )
 }

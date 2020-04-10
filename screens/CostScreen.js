@@ -58,6 +58,14 @@ const CostScreen = ({route, navigation}) => {
           titleStyle={styles.label}
           subtitleStyle={styles.value}
         />
+
+        {!!cost.deleted_at && <ListItem
+          title='Удален'
+          subtitle={dateTimeText(cost.deleted_at)}
+          containerStyle={styles.itemContainer}
+          titleStyle={styles.label}
+          subtitleStyle={styles.value}
+        />}
       </>}
     </ScrollView>
   )

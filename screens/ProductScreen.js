@@ -57,6 +57,14 @@ const ProductScreen = ({route, navigation}) => {
           titleStyle={styles.label}
           subtitleStyle={styles.value}
         />
+
+        {!!product.deleted_at && <ListItem
+          title='Удален'
+          subtitle={dateTimeText(product.deleted_at)}
+          containerStyle={styles.itemContainer}
+          titleStyle={styles.label}
+          subtitleStyle={styles.value}
+        />}
       </>}
     </ScrollView>
   )

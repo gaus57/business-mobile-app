@@ -84,7 +84,11 @@ const OrdersListScreen = ({route, navigation}) => {
                   type: 'rangeDate',
                   ...orderDateRange,
                   label: 'Дата',
-                }
+                },
+                deleted_at: {
+                  type: 'checkbox',
+                  text: 'Удаленные продажы',
+                },
               },
             }}
             onChange={(newFilters) => {
@@ -98,7 +102,7 @@ const OrdersListScreen = ({route, navigation}) => {
         }
         ListEmptyComponent={
           page > 1 &&
-          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет заказов</Text>
+          <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет продаж</Text>
         }
       />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Card, Divider, Icon, Overlay, SearchBar} from 'react-native-elements';
+import {Card, CheckBox, Divider, Icon, Overlay, SearchBar} from 'react-native-elements';
 import Slider from './filters/Slider';
 import layout from '../constants/Layout';
 import DateRange from './filters/DateRange';
@@ -78,7 +78,7 @@ const Filter = ({value, options = {}, onChange}) => {
 
       {Filter}
 
-      <Divider style={{marginVertical: 10}} />
+      <Divider style={{marginTop: 10}} />
     </View>
   )
 };
@@ -121,9 +121,22 @@ const RangeDate = ({value, onChange, min, max}) => {
   )
 };
 
+const Checkbox = ({value, text, onChange}) => {
+
+  return (
+    <CheckBox
+      title={text}
+      checked={!!value}
+      onPress={() => { onChange(!value) }}
+      containerStyle={{marginTop: 15, backgroundColor: 'transparent', borderWidth: 0}}
+    />
+  )
+};
+
 const filtersMap = {
   'rangeSlider': RangeSlider,
   'rangeDate': RangeDate,
+  'checkbox': Checkbox,
 };
 
 export default React.memo(SearchFilterBar);

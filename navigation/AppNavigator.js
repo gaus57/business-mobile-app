@@ -15,7 +15,7 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} options={{title: 'Главная'}} />
-        <Drawer.Screen name="Orders" component={OrdersNavigator} options={{title: 'Заказы'}} />
+        <Drawer.Screen name="Orders" component={OrdersNavigator} options={{title: 'Продажы'}} />
         <Drawer.Screen name="Products" component={ProductsNavigator} options={{title: 'Товары'}} />
         <Drawer.Screen name="Costs" component={CostsNavigator} options={{title: 'Расходы'}} />
         <Drawer.Screen name="Analytics" component={AnalyticsNavigator} options={{title: 'Аналитика'}} />

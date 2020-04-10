@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tab Navigation Template",
+    "name": "Trade",
     "slug": "TradeApp",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -25,7 +25,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "ru.gaus57.trade",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "ru.gaus57.trade",
+      "versionCode": 1
+    },
+    "description": "",
+    "githubUrl": "https://github.com/gaus57/business-mobile-app"
   }
 }

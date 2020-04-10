@@ -12,6 +12,11 @@ function prepareOrdersQuery({filters, sort, page = 1, limit = 20}) {
     limit: limit,
     order: 'created_at DESC',
   };
+  if (filters.deleted_at) {
+    options.where.deleted_at_notnull = null;
+  } else {
+    options.where.deleted_at_null = null;
+  }
   if (filters.total) {
     options.where.total_gteq = filters.total[0];
     options.where.total_lteq = filters.total[1];
@@ -63,13 +68,37 @@ const CreateOrder = async (data) => {
 };
 
 const UpdateOrder = async (data) => {
+  console.log('UpdateOrder', data);
   data.updated_at = Date.now();
-  const order = await Order.update({...data, updated_at: Date.now()});
-  order.orderProducts = await Promise.all(data.orderProducts.map(orderProduct => OrderProduct.update({...orderProduct, qty: orderProduct.qty || 1, updated_at: Date.now()})));
-  const deleted = await OrderProduct.query({where: {order_id_eq: data.id, id_nin: data.orderProducts.map(orderProduct => orderProduct.id)}});
-  await Promise.all(deleted.map(item => OrderProduct.destroy(item.id)));
+  const order = await Order.update(data);
+  order.orderProducts = await Promise.all(data.orderProducts.map(orderProduct => {
+    return new Promise(async (resolve, _) => {
+      let item;
+      if (orderProduct.id) {
+        item = await OrderProduct.update({...orderProduct, qty: orderProduct.qty || 1, updated_at: Date.now()});
+      } else {
+        item = await (new OrderProduct({...orderProduct, order_id: data.id, qty: orderProduct.qty || 1})).save();
+      }
+      resolve(item);
+    });
+  }));
+  if (!data.orderProducts.length) {
+    const deleted = await OrderProduct.query({where: {order_id_eq: data.id}});
+    await Promise.all(deleted.map(item => OrderProduct.destroy(item.id)));
+  } else {
+    const deleted = await OrderProduct.query({where: {order_id_eq: data.id, id_nin: order.orderProducts.map(orderProduct => orderProduct.id)}});
+    await Promise.all(deleted.map(item => OrderProduct.destroy(item.id)));
+  }
 
   return order;
+};
+
+const RemoveOrder = async (id) => {
+  return await Order.update({id, deleted_at: Date.now(), updated_at: Date.now()});
+};
+
+const RepairOrder = async (id) => {
+  return await Order.update({id, deleted_at: null, updated_at: Date.now()});
 };
 
 const GetOrdersTotalRange = async () => {
@@ -84,6 +113,11 @@ function prepareProductsQuery({filters = {}, sort, page = 1, limit = 20}) {
     limit: limit,
     order: 'name ASC'
   };
+  if (filters.deleted_at) {
+    options.where.deleted_at_notnull = null;
+  } else {
+    options.where.deleted_at_null = null;
+  }
   if (filters.price) {
     options.where.price_gteq = filters.price[0];
     options.where.price_lteq = filters.price[1];
@@ -128,6 +162,14 @@ const UpdateProduct = async (data) => {
   return await Product.update({...data, updated_at: Date.now()});
 };
 
+const RemoveProduct = async (id) => {
+  return await Product.update({id, deleted_at: Date.now(), updated_at: Date.now()});
+};
+
+const RepairProduct = async (id) => {
+  return await Product.update({id, deleted_at: null, updated_at: Date.now()});
+};
+
 const GetProductPriceRange = async () => {
   return await Product.getPriceRange();
 };
@@ -135,11 +177,16 @@ const GetProductPriceRange = async () => {
 function prepareCostsQuery({filters = {}, sort, page = 1, limit = 20}) {
   const options = {
     columns: '*',
-    where: {},
+    where: {deleted_at_null: null},
     page: page,
     limit: limit,
     order: 'created_at DESC'
   };
+  if (filters.deleted_at) {
+    options.where.deleted_at_notnull = null;
+  } else {
+    options.where.deleted_at_null = null;
+  }
   if (filters.total) {
     options.where.total_gteq = filters.total[0];
     options.where.total_lteq = filters.total[1];
@@ -180,6 +227,14 @@ const UpdateCost = async (data) => {
   return await Cost.update({...data, updated_at: Date.now()});
 };
 
+const RemoveCost = async (id) => {
+  return await Cost.update({id, deleted_at: Date.now(), updated_at: Date.now()});
+};
+
+const RepairCost = async (id) => {
+  return await Cost.update({id, deleted_at: null, updated_at: Date.now()});
+};
+
 const GetCostTotalRange = async () => {
   return await Cost.getTotalRange();
 };
@@ -193,35 +248,35 @@ const GetUnit = async (id) => {
 };
 
 const GetOrderCreatedAtRange = async () => {
-  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "orders";`;
+  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "orders" WHERE deleted_at IS NULL;`;
   const params = [];
   const rows = await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
   return rows.shift();
 };
 
 const GetCostCreatedAtRange = async () => {
-  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "costs";`;
+  const sql = `SELECT MIN(created_at) as "min", MAX(created_at) as "max" FROM "costs" WHERE deleted_at IS NULL;`;
   const params = [];
   const rows = await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
   return rows.shift();
 };
 
 const GetStatOrdersTotal = async () => {
-  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders GROUP BY year, month ORDER BY year DESC, month DESC;`;
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders WHERE deleted_at IS NULL GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
 
   return await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
 const GetStatCostsTotal = async () => {
-  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs GROUP BY year, month ORDER BY year DESC, month DESC;`;
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs WHERE deleted_at IS NULL GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
 
   return await Cost.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
 const GetStatProductsTotals = async (from, to) => {
-  const where = [];
+  const where = ['deleted_at IS NULL'];
   const params = [];
   if (from) {
     where.push(`o.created_at >= ?`);
@@ -239,7 +294,7 @@ const GetStatProductsTotals = async (from, to) => {
 };
 
 const GetStatProductTotals = async (ids, from, to) => {
-  const where = [`op.product_id IN(${ids.map(i=>'?').join(', ')})`];
+  const where = [`op.product_id IN(${ids.map(i=>'?').join(', ')})`, 'deleted_at IS NULL'];
   const params = [...ids];
   if (from) {
     where.push(`o.created_at >= ?`);
@@ -270,18 +325,24 @@ export default {
   GetOrder,
   CreateOrder,
   UpdateOrder,
+  RemoveOrder,
+  RepairOrder,
   GetOrdersTotal,
   GetOrdersTotalRange,
   GetProducts,
   GetProduct,
   CreateProduct,
   UpdateProduct,
+  RemoveProduct,
+  RepairProduct,
   GetProductPriceRange,
   GetProductsTotal,
   GetCosts,
   GetCost,
   CreateCost,
   UpdateCost,
+  RemoveCost,
+  RepairCost,
   GetCostsTotal,
   GetCostTotalRange,
   GetUnits,

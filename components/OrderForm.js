@@ -49,7 +49,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
     }
 
     setState((state) => {
-      const newState = {...state};
+      const newState = {...state, orderProducts: [...state.orderProducts]};
       newState.orderProducts.push({
         product_id: p.id,
         price: p.price,
@@ -73,12 +73,12 @@ const OrderForm = ({setState, onSubmit, data}) => {
             title={orderProduct.product.name}
             subtitle={`${moneyFormat(orderProduct.price)} ₽ / ${orderProduct.unit.name}`}
             input={{
-              inputComponent: InputQty,
+              // inputComponent: InputQty,
               value: ''+orderProduct.qty,
               placeholder: '1',
               keyboardType: 'numeric',
               containerStyle: {flexGrow: .5, height: 40},
-              inputStyle: {paddingHorizontal: 5},
+              inputStyle: {paddingHorizontal: 5, borderBottomWidth: .5},
               onChangeText: (val) => {
                 setState((state) => {
                   const newState = {...state};
@@ -152,7 +152,7 @@ const OrderForm = ({setState, onSubmit, data}) => {
       />}
 
       {data.created_at && <DateTimePicker
-        label='Время заказа'
+        label='Время'
         value={data.created_at}
         onChange={(created_at) => {
           setState((state) => ({...state, created_at}))
@@ -169,18 +169,8 @@ const OrderForm = ({setState, onSubmit, data}) => {
 };
 
 const InputQty = (props) => {
-  // const ref = React.useRef();
-  //
-  // React.useEffect(() => {
-  //   if (props.value) return;
-  //   ref.current.focus();
-  // }, []);
-
   return (
-    <Input
-      // ref={ref}
-      {...props}
-    />
+    <Input {...props} />
   )
 };
 

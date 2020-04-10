@@ -37,7 +37,7 @@ export default class Product extends BaseModel {
   }
 
   static async getPriceRange() {
-    const sql = 'SELECT min(price) as "min", max(price) as "max" FROM products;';
+    const sql = 'SELECT min(price) as "min", max(price) as "max" FROM products WHERE deleted_at IS NULL;';
     const rows = await this.repository.databaseLayer.executeSql(sql, []).then(({ rows }) => rows);
     return rows.shift();
   }
