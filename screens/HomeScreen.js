@@ -16,6 +16,9 @@ const HomeScreen = ({navigation}) => {
       <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Costs')}>
         <Text style={styles.menuButtonText}>Расходы</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Reports')}>
+        <Text style={styles.menuButtonText}>Отчеты</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Analytics')}>
         <Text style={styles.menuButtonText}>Аналитика</Text>
       </TouchableOpacity>
@@ -31,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
+    paddingVertical: 20,
     fontSize: 40,
     fontWeight: 'bold',
     color: '#73be2d',

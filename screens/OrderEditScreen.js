@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, ToastAndroid, RefreshControl, ScrollView} from 'react-native';
 import Repo from '../repository/repo';
 import OrderForm from '../components/OrderForm';
+import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
 
 const OrderEditScreen = ({route, navigation}) => {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -19,11 +20,12 @@ const OrderEditScreen = ({route, navigation}) => {
   }, [id]);
 
   React.useEffect(() => { refresh() }, [route]);
-  console.log(order);
+
   return (
-    <ScrollView
+    <ScrollViewKeyboardFix
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-      style={{flex: 1}}
+      style={styles.container}
+      dopMargin={-50}
     >
       {order && <OrderForm
         data={order}
@@ -33,7 +35,7 @@ const OrderEditScreen = ({route, navigation}) => {
           ToastAndroid.show('Продажа сохранена', ToastAndroid.SHORT);
           navigation.navigate('OrdersList', {v: Date.now()});
         }}/>}
-    </ScrollView>
+    </ScrollViewKeyboardFix>
   )
 };
 

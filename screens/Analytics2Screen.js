@@ -6,7 +6,7 @@ import Repo from '../repository/repo';
 import {ListItem} from 'react-native-elements';
 import Layout from '../constants/Layout';
 import DateRange from '../components/filters/DateRange';
-import {ceilDate, floorDate} from '../helpers/date';
+import {ceilDate, floorDate, floorMonth} from '../helpers/date';
 import {moneyFormat} from '../helpers/number';
 
 const Analytics2Screen = ({route, navigation}) => {
@@ -26,15 +26,20 @@ const Analytics2Screen = ({route, navigation}) => {
     if (scope.max) scope.max = ceilDate(new Date(scope.max)).getTime();
     setDateScope(scope);
 
-    const rows = await Repo.GetStatProductsTotals(from, to);
-    setData(rows.map((item, i) => ({...item, x: i+1})));
+    if (!from && !to) {
+      scope.min && scope.max && navigation.setParams({
+        from: scope.max - scope.min < 5*31*24*60*60*1000 ? scope.min : floorMonth(new Date(scope.max-6*31*24*60*60*1000)).getTime(),
+        to: scope.max,
+      })
+    } else {
+      const rows = await Repo.GetStatProductsTotals(from, to);
+      setData(rows.map((item, i) => ({...item, x: i + 1})));
+    }
 
     setRefreshing(false);
   }, [from, to]);
 
-  React.useEffect(() => {
-    refresh();
-  }, [route]);
+  React.useEffect(() => { refresh() }, [route]);
 
   const changeDateRange = React.useCallback((val) => {
     navigation.setParams({from: val[0], to: val[1]})
@@ -45,7 +50,7 @@ const Analytics2Screen = ({route, navigation}) => {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
       style={styles.container}
     >
-      <View>
+      {!!dateScope.min && <View>
         <Text style={{textAlign: 'center', fontSize: 18, marginBottom: 10}}>Период выборки</Text>
         <DateRange
           value={[from, to]}
@@ -53,7 +58,7 @@ const Analytics2Screen = ({route, navigation}) => {
           min={dateScope.min}
           max={dateScope.max}
         />
-      </View>
+      </View>}
 
       {!data.length && !refreshing &&
         <Text style={{textAlign: 'center', paddingVertical: 30}}>Нет данных</Text>
@@ -101,6 +106,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
+    marginBottom: 20,
   }
 });
 

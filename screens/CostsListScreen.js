@@ -87,7 +87,7 @@ const CostsListScreen = ({route, navigation}) => {
                 },
                 deleted_at: {
                   type: 'checkbox',
-                  text: 'Удаленные товары',
+                  text: 'Удаленные расходы',
                 },
               },
             }}

@@ -56,3 +56,27 @@ export function floorMonth(date) {
   date.setDate(1);
   return floorDate(date);
 }
+
+const months = [
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
+];
+
+/**
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+export function ruMonth(date) {
+  return months[date.getMonth()];
+}

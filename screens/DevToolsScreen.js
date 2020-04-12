@@ -54,7 +54,7 @@ async function loadTestData() {
       const date = new Date();
       date.setFullYear(2020 - Math.ceil(Math.random() * 4), Math.floor(Math.random() * 12), Math.ceil(Math.random() * 28));
       await Repo.CreateCost({
-        total: Math.ceil(Math.random() * 4000 + 500),
+        total: Math.ceil(Math.random() * 14000 + 1500),
         created_at: date.getTime(),
         comment: 'На что-то там...',
       });

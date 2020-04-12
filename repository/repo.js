@@ -68,21 +68,21 @@ const CreateOrder = async (data) => {
 };
 
 const UpdateOrder = async (data) => {
-  console.log('UpdateOrder', data);
   data.updated_at = Date.now();
   const order = await Order.update(data);
   order.orderProducts = await Promise.all(data.orderProducts.map(orderProduct => {
     return new Promise(async (resolve, _) => {
       let item;
       if (orderProduct.id) {
-        item = await OrderProduct.update({...orderProduct, qty: orderProduct.qty || 1, updated_at: Date.now()});
+        item = {...orderProduct, qty: orderProduct.qty || 1, updated_at: Date.now()}
+        await OrderProduct.update(item);
       } else {
         item = await (new OrderProduct({...orderProduct, order_id: data.id, qty: orderProduct.qty || 1})).save();
       }
       resolve(item);
     });
   }));
-  if (!data.orderProducts.length) {
+  if (!order.orderProducts.length) {
     const deleted = await OrderProduct.query({where: {order_id_eq: data.id}});
     await Promise.all(deleted.map(item => OrderProduct.destroy(item.id)));
   } else {
@@ -261,22 +261,22 @@ const GetCostCreatedAtRange = async () => {
   return rows.shift();
 };
 
-const GetStatOrdersTotal = async () => {
-  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders WHERE deleted_at IS NULL GROUP BY year, month ORDER BY year DESC, month DESC;`;
+const GetStatOrdersTotal = async (from, to) => {
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM orders WHERE deleted_at IS NULL AND created_at >= ${from} AND created_at <= ${to} GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
 
   return await Order.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
-const GetStatCostsTotal = async () => {
-  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs WHERE deleted_at IS NULL GROUP BY year, month ORDER BY year DESC, month DESC;`;
+const GetStatCostsTotal = async (from, to) => {
+  let sql = `SELECT strftime('%Y', created_at/1000, 'unixepoch') as "year",  strftime('%m', created_at/1000, 'unixepoch') as "month", SUM(total) as "value" FROM costs WHERE deleted_at IS NULL AND created_at >= ${from} AND created_at <= ${to} GROUP BY year, month ORDER BY year DESC, month DESC;`;
   const params = [];
 
   return await Cost.repository.databaseLayer.executeSql(sql, params).then(({rows}) => rows);
 };
 
 const GetStatProductsTotals = async (from, to) => {
-  const where = ['deleted_at IS NULL'];
+  const where = ['o.deleted_at IS NULL'];
   const params = [];
   if (from) {
     where.push(`o.created_at >= ?`);

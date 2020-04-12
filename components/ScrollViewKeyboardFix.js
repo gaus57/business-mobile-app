@@ -29,27 +29,26 @@ export default class ScrollViewKeyboardFix extends React.Component {
   }
 
   _keyboardDidShow = (event) => {
-    console.log('keyboardDidShow', event.endCoordinates.height);
     this.setState({
       keyboardOffset: event.endCoordinates.height,
     })
   };
 
   _keyboardDidHide = () => {
-    console.log('keyboardDidHide');
     this.setState({
       keyboardOffset: 0,
     })
   };
 
   render() {
-    const {children, style = {}, ...props} = this.props;
-    console.log('render scroll', {...style, marginBottom: (style.marginBottom || 0) + this.state.keyboardOffset});
+    const {children, style = {}, dopMargin = 0, ...props} = this.props;
+    const marginBottom = (style.marginBottom || 0) + this.state.keyboardOffset + (!!this.state.keyboardOffset && dopMargin);
+
     return (
       <ScrollView
         keyboardShouldPersistTaps='always'
         keyboardDismissMode='on-drag'
-        style={{...style, marginBottom: (style.marginBottom || 0) + this.state.keyboardOffset}}
+        style={{...style, marginBottom}}
         {...props}
       >
         {children}

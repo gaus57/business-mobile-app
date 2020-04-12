@@ -13,3 +13,7 @@ export function indexBy(arr, key) {
 
   return map;
 }
+
+export function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}

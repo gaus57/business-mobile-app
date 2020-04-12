@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, RefreshControl, ToastAndroid, ScrollView} from 'react-native';
 import Repo from '../repository/repo';
 import CostForm from '../components/CostForm';
+import ScrollViewKeyboardFix from '../components/ScrollViewKeyboardFix';
 
 const CostEditScreen = ({route, navigation}) => {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -28,15 +29,16 @@ const CostEditScreen = ({route, navigation}) => {
   }, [navigation]);
 
   return (
-    <ScrollView
+    <ScrollViewKeyboardFix
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-      style={{flex: 1}}
+      style={styles.container}
+      dopMargin={-50}
     >
       {cost && <CostForm
         data={cost}
         setState={setCost}
         onSubmit={submit} />}
-    </ScrollView>
+    </ScrollViewKeyboardFix>
   )
 };
 
