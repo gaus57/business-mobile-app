@@ -13,13 +13,13 @@ const DateRange = ({value = [], min, max, onChange}) => {
     setShowFrom(Platform.OS === 'ios');
     if (!selectedDate) return;
     onChange([floorDate(selectedDate).getTime(), value[1]]);
-  }, [value]);
+  }, [value, onChange]);
 
   const changeTo = React.useCallback((event, selectedDate) => {
     setShowTo(Platform.OS === 'ios');
     if (!selectedDate) return;
     onChange([value[0], ceilDate(selectedDate).getTime()]);
-  }, [value]);
+  }, [value, onChange]);
 
   return (
     <View style={styles.container}>

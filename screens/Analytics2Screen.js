@@ -76,7 +76,6 @@ const Analytics2Screen = ({route, navigation}) => {
             duration: 2000
           }}
           theme={VictoryTheme.material}
-          // colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
         />}
         {total > 0 && <VictoryLabel
           text={`${total} ₽`}

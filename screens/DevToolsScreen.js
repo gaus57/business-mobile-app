@@ -51,10 +51,9 @@ async function loadTestData() {
   // Создаем расходы
   for (let i = 0; i < 20; i++) {
     await Promise.all(Array.apply(null, Array(10)).map(() => new Promise(async (resolve, _) => {
-      const date = new Date();
-      date.setFullYear(2020 - Math.ceil(Math.random() * 4), Math.floor(Math.random() * 12), Math.ceil(Math.random() * 28));
+      const date = new Date(Date.now() - Math.floor(Math.random()*3*365*24*60*60*1000));
       await Repo.CreateCost({
-        total: Math.ceil(Math.random() * 14000 + 1500),
+        total: Math.ceil(Math.random() * 30000 + 1500),
         created_at: date.getTime(),
         comment: 'На что-то там...',
       });
@@ -79,8 +78,7 @@ async function createRandomOrder(products) {
     total += qty*p.price;
   }
   newOrder.total = total + Math.ceil(((Math.random()*total/100*40)-(total/100*20))*100)/100;
-  const date = new Date();
-  date.setFullYear(2020-Math.ceil(Math.random()*4), Math.floor(Math.random()*12), Math.ceil(Math.random()*28));
+  const date = new Date(Date.now() - Math.floor(Math.random()*3*365*24*60*60*1000));
   newOrder.created_at = date.getTime();
 
   return await Repo.CreateOrder(newOrder);

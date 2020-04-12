@@ -11,7 +11,7 @@ const Analytics1Stack = createStackNavigator();
 function Analytics1Navigator() {
   return (
     <Analytics1Stack.Navigator>
-      <Analytics1Stack.Screen name="Analytics1" component={Analytics1Screen} options={{title: 'Аналитика 1'}} />
+      <Analytics1Stack.Screen name="Analytics1" component={Analytics1Screen} options={{title: 'Прибыль'}} />
     </Analytics1Stack.Navigator>
   )
 }
@@ -20,7 +20,7 @@ const Analytics2Stack = createStackNavigator();
 function Analytics2Navigator() {
   return (
     <Analytics2Stack.Navigator>
-      <Analytics2Stack.Screen name="Analytics2" component={Analytics2Screen} options={{title: 'Аналитика 2'}} />
+      <Analytics2Stack.Screen name="Analytics2" component={Analytics2Screen} options={{title: 'Структура'}} />
     </Analytics2Stack.Navigator>
   )
 }
@@ -29,7 +29,7 @@ const Analytics3Stack = createStackNavigator();
 function Analytics3Navigator() {
   return (
     <Analytics3Stack.Navigator>
-      <Analytics3Stack.Screen name="Analytics3" component={Analytics3Screen} options={{title: 'Аналитика 3'}} />
+      <Analytics3Stack.Screen name="Analytics3" component={Analytics3Screen} options={{title: 'Товары'}} />
     </Analytics3Stack.Navigator>
   )
 }
@@ -39,16 +39,16 @@ export default function AnalyticsNavigator() {
   return (
     <BottomTab.Navigator tabBar={props => <BottomTabCustom {...props} />}>
       <BottomTab.Screen name="Analytics1" component={Analytics1Navigator} options={{
-        title: 'Аналитика 1',
-        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-stats" />,
+        title: 'Прибыль',
+        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-trending-up" />,
       }} />
       <BottomTab.Screen name="Analytics2" component={Analytics2Navigator} options={{
-        title: 'Аналитика 2',
+        title: 'Структура',
         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-pie" />,
       }} />
       <BottomTab.Screen name="Analytics3" component={Analytics3Navigator} options={{
-        title: 'Аналитика 3',
-        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-trending-up" />,
+        title: 'Товары',
+        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-stats" />,
       }} />
     </BottomTab.Navigator>
   )

@@ -66,9 +66,6 @@ const Analytics3Screen = ({route, navigation}) => {
     } else {
       newIds.push(p.id);
     }
-    // if (newIds.length > 6) {
-    //   ToastAndroid.show('Расход сохранен', ToastAndroid.SHORT);
-    // }
     navigation.setParams({ids: newIds})
   }, [navigation, ids]);
 

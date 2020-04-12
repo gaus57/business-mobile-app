@@ -18,12 +18,20 @@ function prepareOrdersQuery({filters, sort, page = 1, limit = 20}) {
     options.where.deleted_at_null = null;
   }
   if (filters.total) {
-    options.where.total_gteq = filters.total[0];
-    options.where.total_lteq = filters.total[1];
+    if (filters.total[0]) {
+      options.where.total_gteq = filters.total[0];
+    }
+    if (filters.total[1]) {
+      options.where.total_lteq = filters.total[1];
+    }
   }
   if (filters.created_at) {
-    options.where.created_at_gteq = filters.created_at[0];
-    options.where.created_at_lteq = filters.created_at[1];
+    if (filters.created_at[0]) {
+      options.where.created_at_gteq = filters.created_at[0];
+    }
+    if (filters.created_at[1]) {
+      options.where.created_at_lteq = filters.created_at[1];
+    }
   }
   if (filters.search) {
     options.where.id_eq = Number.parseInt(filters.search, 10);
@@ -119,8 +127,12 @@ function prepareProductsQuery({filters = {}, sort, page = 1, limit = 20}) {
     options.where.deleted_at_null = null;
   }
   if (filters.price) {
-    options.where.price_gteq = filters.price[0];
-    options.where.price_lteq = filters.price[1];
+    if (filters.price[0]) {
+      options.where.price_gteq = filters.price[0];
+    }
+    if (filters.price[1]) {
+      options.where.price_lteq = filters.price[1];
+    }
   }
   if (filters.name) {
     options.where.name_cont = `%${filters.name}%`;
@@ -188,12 +200,20 @@ function prepareCostsQuery({filters = {}, sort, page = 1, limit = 20}) {
     options.where.deleted_at_null = null;
   }
   if (filters.total) {
-    options.where.total_gteq = filters.total[0];
-    options.where.total_lteq = filters.total[1];
+    if (filters.total[0]) {
+      options.where.total_gteq = filters.total[0];
+    }
+    if (filters.total[1]) {
+      options.where.total_lteq = filters.total[1];
+    }
   }
   if (filters.created_at) {
-    options.where.created_at_gteq = filters.created_at[0];
-    options.where.created_at_lteq = filters.created_at[1];
+    if (filters.created_at[0]) {
+      options.where.created_at_gteq = filters.created_at[0];
+    }
+    if (filters.created_at[1]) {
+      options.where.created_at_lteq = filters.created_at[1];
+    }
   }
   if (filters.comment) {
     options.where.comment_cont = `%${filters.comment}%`;

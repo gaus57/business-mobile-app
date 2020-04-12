@@ -30,7 +30,7 @@ const MultiLineZoomChart = ({lines = []}) => {
         theme={VictoryTheme.material}
         width={Layout.window.width}
         height={360 + 32*lines.length}
-        padding={{left: 60, top: 20, right: 20, bottom: 50 + 32*lines.length}}
+        padding={{left: 70, top: 20, right: 20, bottom: 50 + 32*lines.length}}
         scale={{x: "time"}}
       >
         <VictoryAxis
@@ -98,7 +98,9 @@ function tickX(t) {
 }
 
 function tickY(t) {
-  if (t >= 9000 && !(t%1000)) {
+  if (t >= 9000000 && !(t%1000000)) {
+    return `${Math.round(t/1000000)} м.₽`;
+  } else if (t >= 9000 && !(t%1000)) {
     return `${Math.round(t/1000)} т.₽`;
   }
   return `${Math.round(t)} ₽`;
