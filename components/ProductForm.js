@@ -51,7 +51,6 @@ const ProductForm = ({units = [], setState, onSubmit, data}) => {
         value={data.unit_id}
         items={units.map(item => [item.id, item.name])}
         onChange={(itemValue, itemIndex) => {
-          console.log('Change unit_id', itemValue);
           setState((state) => ({...state, unit_id: itemValue}))
         }} />
 

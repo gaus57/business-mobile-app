@@ -26,7 +26,6 @@ const MultiLineZoomChart = ({lines = []}) => {
   const [zoomDomain, setZoomDomain] = React.useState();
 
   const select = React.useCallback((domain) => {
-    console.log('zoomDomain', domain);
     setZoomDomain(domain);
     setSelectedDomain(domain);
   }, [lines]);
@@ -39,7 +38,7 @@ const MultiLineZoomChart = ({lines = []}) => {
       setSelectedDomain(newZoom);
     }
   }, [lines]);
-console.log('render', lines);
+
   return (
     <View>
       <VictoryChart

@@ -23,7 +23,7 @@ const MultiLineZoomChart = ({lines = []}) => {
     tickMap[tick.toString()] = tick;
   }
   tickValues = Object.values(tickMap);
-  console.log(tickValues);
+
   return (
     <View>
       <VictoryChart
