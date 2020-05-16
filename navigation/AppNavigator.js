@@ -21,7 +21,7 @@ export default function AppNavigator() {
         <Drawer.Screen name="Costs" component={CostsNavigator} options={{title: 'Расходы'}} />
         <Drawer.Screen name="Reports" component={ReportsNavigator} options={{title: 'Отчеты'}} />
         <Drawer.Screen name="Analytics" component={AnalyticsNavigator} options={{title: 'Аналитика'}} />
-        <Drawer.Screen name="DevTools" component={DevToolsNavigator} options={{title: 'Инструменты разработчика'}} />
+        {/*<Drawer.Screen name="DevTools" component={DevToolsNavigator} options={{title: 'Инструменты разработчика'}} />*/}
       </Drawer.Navigator>
     </NavigationContainer>
   );

@@ -1,6 +1,9 @@
 const tintColor = '#2f95dc';
+const mainAppColor = '#73be2d';
 
 export default {
+  addBtnColor: mainAppColor,
+
   tintColor,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,

@@ -86,7 +86,7 @@ const Analytics2Screen = ({route, navigation}) => {
         />}
       </Svg>
 
-      <View>
+      <View style={{paddingBottom: 20}}>
         {data.map(item => <ListItem
           key={item.id}
           title={item.label}
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    marginBottom: 20,
   }
 });
 

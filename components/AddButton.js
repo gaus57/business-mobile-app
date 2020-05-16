@@ -1,10 +1,15 @@
 import * as React from 'react';
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import Colors from '../constants/Colors';
+import {Ionicons} from '@expo/vector-icons';
 
 const AddButton = ({onPress}) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>+</Text>
+      <Ionicons
+        name='md-add'
+        size={50}
+      />
     </TouchableOpacity>
   )
 };
@@ -19,9 +24,9 @@ const styles = StyleSheet.create({
     width: 70,
     bottom: 30,
     right: 30,
-    backgroundColor: '#aaa',
+    backgroundColor: Colors.addBtnColor,
     borderRadius: 40,
-    opacity: .6,
+    opacity: .8,
   },
   text: {
     fontSize: 50,
