@@ -30,7 +30,7 @@
     "android": {
       "permissions": [],
       "package": "ru.gaus57.trade",
-      "versionCode": 2
+      "versionCode": 3
     },
     "description": "",
     "githubUrl": "https://github.com/gaus57/business-mobile-app"
