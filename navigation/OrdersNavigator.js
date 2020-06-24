@@ -43,7 +43,7 @@ const Stack = createStackNavigator();
 export default function OrdersNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="OrdersList" component={OrdersListScreen} options={{title: 'Продажы'}} />
+      <Stack.Screen name="OrdersList" component={OrdersListScreen} options={{title: 'Продажи'}} />
       <Stack.Screen name="OrderCreate" component={OrderCreateScreen} options={{title: 'Новая продажа'}} />
       <Stack.Screen name="Order" component={OrderBottomTabNavigator} options={({route}) => ({title: 'Продажа №'+route.params.id})} />
     </Stack.Navigator>

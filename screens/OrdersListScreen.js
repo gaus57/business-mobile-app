@@ -87,7 +87,7 @@ const OrdersListScreen = ({route, navigation}) => {
                 },
                 deleted_at: {
                   type: 'checkbox',
-                  text: 'Удаленные продажы',
+                  text: 'Удаленные продажи',
                 },
               },
             }}
